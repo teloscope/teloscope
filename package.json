@@ -1,0 +1,35 @@
+{
+  "name": "teloscope",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"webpack --watch\" \"nodemon ./bin/www\"",
+    "build": "webpack",
+    "start": "node ./bin/www",
+    "lint": "eslint -c .eslintrc.js --ext .ts",
+    "fix": "eslint --fix .eslintrc.js --ext .ts"
+  },
+  "dependencies": {
+    "@types/matter-js": "^0.14.4",
+    "concurrently": "^5.2.0",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "entropi": "^0.1.8",
+    "express": "~4.16.1",
+    "http-errors": "~1.6.3",
+    "matter-js": "^0.14.2",
+    "morgan": "~1.9.1",
+    "nodemon": "^2.0.4",
+    "paper": "^0.12.11",
+    "pug": "2.0.0-beta11"
+  },
+  "devDependencies": {
+    "eslint": "^7.4.0",
+    "eslint-config-prettier": "^6.11.0",
+    "file-loader": "^6.0.0",
+    "ts-loader": "^7.0.5",
+    "typescript": "^3.9.6",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.12"
+  }
+}
