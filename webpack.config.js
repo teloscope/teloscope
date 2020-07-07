@@ -3,7 +3,7 @@ module.exports = {
     mode: 'development',
     watch: false,
     entry: {
-        game: './game/game.ts'
+        // game: './src/games/game.ts'
     },
     output: {
         filename: '[name].js',
