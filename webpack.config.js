@@ -3,7 +3,10 @@ module.exports = {
     mode: 'development',
     watch: false,
     entry: {
-        // game: './src/games/game.ts'
+        alpha: './src/games/alpha/game.ts',
+        alpha_instructions: './src/games/alpha/instructions.ts',
+        delta: './src/games/delta/game.ts',
+        delta_instructions: './src/games/delta/instructions.ts',
     },
     output: {
         filename: '[name].js',
@@ -28,3 +31,4 @@ module.exports = {
         ],
     },
 };
+

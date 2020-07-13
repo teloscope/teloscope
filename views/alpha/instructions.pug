@@ -1,0 +1,26 @@
+extends ../header.pug
+
+block header
+    script(src="/alpha_instructions.js")
+
+block body
+  h3 Instructions
+  p 
+    | This game will look to test a few aspects pertaining to general task management. The game is timed and you will need to choose and complete as many of the tasks as possible.
+    | Before starting, there is a short tutorial below to get you comfortable with the layout of the game. If there is any information you missed or would like to check up again, 
+    | you can find it listed below. Understand that this particular game is intentionally designed to put you under pressure, so take your time to get in the right mindset, go over
+    | the tutorial below and when you're ready press start. Good luck!
+  hr
+  canvas(id="instructionsCanvas")
+  hr
+  p 
+    | Summary of the rules of the game:
+  ul
+    li Click around the map, to move your player around. It is recommended that you use a mouse. 
+    li Colliding with objects will cause you to pick them up, press ENTER to drop them or if you move into the correct zone they will be automatically dropped
+    li Tasks will appear randomly on the right, they can be completed in any order, or ignored if you want. 
+    li Each task has a time that you will be given to complete it, a reward (in points) you will receive if you successfully complete it (all objects moved to the prescribed zone) and a punishment (in points) that
+    | you will loose if you don't complete the task
+    li In the top right is your score and the remaining time. The overall objective is to try get the highest score in this time limit (2 minutes)
+    li You won't be able to complete all tasks so choose which ones you want to attempt and don't worry about the ones you miss.
+    

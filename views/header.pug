@@ -1,0 +1,36 @@
+doctype html
+html
+  head
+    title= Teloscope
+    link(rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans")
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    script.
+      pageState="#{pageState}"
+    script(src="/javascript/nav.js")
+    block header
+  body
+    .nav
+      h1 Teloscope
+      a(href='/dev/intro')
+        .topic Introduction
+            
+      a(href='/dev/alpha')
+        .topic Alpha
+            
+      a(href='/dev/alpha')
+        .topic Beta
+      
+      a(href='/dev/alpha')
+        .topic Gamma
+      
+      a(href='/dev/delta')
+        .topic Delta
+        
+      a(href='/dev/assessment')
+        .topic Assessment
+        
+      a(href='/dev/closing')
+        .topic Closing
+    .main
+      .panel
+        block body
