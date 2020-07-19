@@ -28,6 +28,23 @@ router.get('/alpha/review', function(req, res, next) {
 });
 
 
+router.get('/beta', function(req, res, next) {
+  res.redirect('/dev/beta/instructions')
+});
+
+router.get('/beta/instructions', function(req, res, next) {
+  res.render('beta/instructions.pug');
+});
+
+router.get('/beta/game', function(req, res, next) {
+  res.render('beta/game.pug');
+});
+
+router.get('/beta/review', function(req, res, next) {
+  res.render('beta/end.pug');
+});
+
+
 router.get('/delta', function(req, res, next) {
   res.redirect('/dev/delta/instructions')
 });

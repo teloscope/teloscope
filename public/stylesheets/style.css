@@ -50,7 +50,6 @@ h1 {
   width:820px;
   padding:20px;
   padding-top:10vh;
-  /* margin-top: 10vh; */
   overflow: scroll;
   height: 90vh;
   /* background-color:blue; */
@@ -73,7 +72,7 @@ hr {
 
 .button {
   display: block; 
-  margin: 0 auto 0 auto;
+  margin: 10px auto 50px auto;
   width: 60px;
   border: 1px solid #1d1d1d;
   color: #1d1d1d;
