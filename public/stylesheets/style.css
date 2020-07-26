@@ -79,3 +79,8 @@ hr {
   padding: 5px;
   text-align: center;
 }
+
+.nav img {
+  width: 50px;
+  margin-left: 50px;
+}
