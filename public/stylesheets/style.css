@@ -31,6 +31,17 @@ h1 {
   color: #1d1d1d;
 }
 
+.subtopic {
+  font-size: 12px;
+  margin: 20px 0 20px 30px;
+  cursor: pointer;
+  color: #3b3b3b;
+}
+
+.subtopic:hover {
+  color: #1d1d1d;
+}
+
 .main {
   position: absolute;
   overflow: hidden;
@@ -51,8 +62,13 @@ h1 {
   padding:20px;
   padding-top:10vh;
   overflow: scroll;
+
   height: 90vh;
   /* background-color:blue; */
+}
+
+.panel::-webkit-scrollbar {
+  display: none;
 }
 
 a {

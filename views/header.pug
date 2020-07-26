@@ -17,15 +17,55 @@ html
             
       a(href='/dev/alpha')
         .topic Alpha
+
+      if game == "alpha"
+        a(href='/dev/alpha/instructions')
+          .subtopic Instructions
+
+        a(href='/dev/alpha/game')
+          .subtopic Game
+
+        a(href='/dev/alpha/review')
+          .subtopic Review
             
       a(href='/dev/beta')
         .topic Beta
       
+      if game == "beta"
+        a(href='/dev/beta/instructions')
+          .subtopic Instructions
+
+        a(href='/dev/beta/game')
+          .subtopic Game
+
+        a(href='/dev/beta/review')
+          .subtopic Review
+
       a(href='/dev/gamma')
         .topic Gamma
+
+      if game == "gamma"
+        a(href='/dev/gamma/instructions')
+          .subtopic Instructions
+
+        a(href='/dev/gamma/game')
+          .subtopic Game
+
+        a(href='/dev/gamma/review')
+          .subtopic Review
       
       a(href='/dev/delta')
         .topic Delta
+
+      if game == "delta"
+        a(href='/dev/delta/instructions')
+          .subtopic Instructions
+
+        a(href='/dev/delta/game')
+          .subtopic Game
+
+        a(href='/dev/delta/review')
+          .subtopic Review
         
       a(href='/dev/assessment')
         .topic Assessment
