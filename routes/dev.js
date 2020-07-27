@@ -32,7 +32,7 @@ router.get('/alpha/game', function(req, res, next) {
 });
 
 router.get('/alpha/review', function(req, res, next) {
-  res.render('alpha/end.pug',  {game: "alpha"});
+  res.render('alpha/review.pug',  {game: "alpha"});
 });
 
 router.get('/beta', function(req, res, next) {
@@ -48,7 +48,7 @@ router.get('/beta/game', function(req, res, next) {
 });
 
 router.get('/beta/review', function(req, res, next) {
-  res.render('beta/end.pug', {game: "beta"});
+  res.render('beta/review.pug', {game: "beta"});
 });
 
 
@@ -65,7 +65,11 @@ router.get('/delta/game', function(req, res, next) {
 });
 
 router.get('/delta/review', function(req, res, next) {
-  res.render('delta/end.pug', {game: "delta"});
+  res.render('delta/review.pug', {game: "delta"});
+});
+
+router.get('/assessment', function(req, res, next) {
+  res.render('assessment.pug');
 });
 
 module.exports = router;

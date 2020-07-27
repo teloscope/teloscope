@@ -1,5 +1,5 @@
 #!/bin/sh
-# removes the game (does not unwire it) TODO: move first in an archive folder and then clean it later
+# removes the game (does not unwire it)
 
 game=$1
 
@@ -7,7 +7,9 @@ echo removing game $game
 
 cd ..
 
-rm -rf views/$game
+mkdir archive/$game
 
-rm -rf src/games/$game
+mv -rf views/$game archive/$game
+
+mv -rf src/games/$game archive/$game
 

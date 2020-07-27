@@ -25,7 +25,13 @@ mv views/views views/$game
 
 rm views/$game/header.pug
 
+rm views/$game/end.pug
+
 rm views/$game/style.css
+
+cp views/review_template.pug views/$game
+
+mv views/$game/review_template.pug views/$game/review.pug
 
 find views/$game -type f -name "*.pug" -exec perl -i -pe's/extends header/extends ..\/header/g' {} \;
 
@@ -35,4 +41,5 @@ echo game successfully added but not yet wired into teloscope, please:
 echo 1. add routes in routes/dev.js
 echo 2. build game.ts by adding it to webpack.config.js
 echo 3. add appropriate links in the header.pug
-echo 4. make any other changes if the game is outside the usual template
+echo 4. flesh out the review template for the end of the game
+echo 5. make any other changes if the game is outside the usual template
