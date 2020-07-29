@@ -1,0 +1,30 @@
+table {
+    width: 100%;
+}
+
+td {
+    width: 20%;
+}
+
+label {
+    font-size: 14px;
+    color: #1d1d1d;
+}
+
+.response {
+    width: calc(100% - 20px);
+    padding: 10px;
+    font-family: 'Open Sans', sans-serif;
+    border: 1px solid #cacaca;
+    outline-color: #003366;
+}
+
+button {
+    margin-top:20px;
+    margin-left: calc(50% - 40px);
+    width: 60px;
+    padding: 10px;
+    background-color: transparent;
+    border: 1px solid #333333;
+    border-radius: 3px;
+}

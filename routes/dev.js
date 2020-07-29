@@ -8,11 +8,11 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/intro', function(req, res, next) {
-  console.log("writing to database")
-  const testEntry = new TestModel({
-    name: "Jimmy"
-  })
-  testEntry.save()
+  // console.log("writing to database")
+  // const testEntry = new TestModel({
+  //   name: "Jimmy"
+  // })
+  // testEntry.save()
   res.render('introduction.pug');
 });
 
