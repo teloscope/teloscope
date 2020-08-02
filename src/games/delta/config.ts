@@ -6,10 +6,11 @@ export const config = {
     unitSize: new Size(40, 40),
 
     color: {
-        wall: new Color('black'),
-        gate: new Color('green'),
+        black: new Color('black'),
+        green: new Color('green'),
         red: new Color('red'),
-        yellow: new Color('yellow')
+        yellow: new Color('yellow'),
+        blue: new Color('blue'),
     },
     
     //movement

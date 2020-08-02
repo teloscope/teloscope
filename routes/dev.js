@@ -1,6 +1,8 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+const fs = require('fs');
 const TestModel = require('../models/test');
+const SnapShot = require('../models/snapshot')
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -63,6 +65,18 @@ router.get('/delta/instructions', function(req, res, next) {
 router.get('/delta/game', function(req, res, next) {
   res.render('delta/game.pug', {game: "delta"});
 });
+
+router.post('/delta/game', function(req, res, next) {
+  console.log("receiving post request for delta game")
+  let snapShot = new SnapShot();
+  snapShot.user = "Callie";
+  // console.log("data: " + req.body.data)
+  snapShot.img.data = new Buffer(req.body.data.split(",")[1],"base64")
+  snapShot.img.contentType = 'image/webp';
+  snapShot.save()
+  
+  res.status(200).json({ message: "Successfully created snapshot"})
+})
 
 router.get('/delta/review', function(req, res, next) {
   res.render('delta/review.pug', {game: "delta"});

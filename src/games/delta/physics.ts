@@ -1,4 +1,5 @@
 import { Physics, Input, Vector, Body } from 'entropi';
+import { extractString } from './utils'
 
 const DEFAULT_MOVEMENT_TIME = 200 // milliseconds
 
@@ -16,10 +17,24 @@ export class GridEngine implements Physics {
     
     private steps: number = 0;
     
+    completed: boolean = false;
+    
     constructor(public grid: Vector, public blockSize: Vector, public offset: Vector = {x: 0, y: 0}) {
         this.grid = grid
         this.blockSize = blockSize;
         this.offset = offset;
+        this.clear()
+        // for (let x = 0; x < this.grid.x; x++) {
+        //     let column: Block[] = [];
+        //     for (let y = 0; y < this.grid.y; y++) {
+        //         column.push(null)
+        //     }
+        //     this.map.push(column)
+        // }
+    }
+    
+    clear() {
+        this.map = [];
         for (let x = 0; x < this.grid.x; x++) {
             let column: Block[] = [];
             for (let y = 0; y < this.grid.y; y++) {
@@ -93,45 +108,45 @@ export class GridEngine implements Physics {
     // TODO: create the update rules
     updateRules(): void { 
         console.log("updating rules")
-        // reset abilities of controlling blocks
-        this.controlling.forEach(block => {
-            block.moveableBlocks = this.defaultMoveable.slice()
+        this.controlling.forEach(node => {
+            node.moveableBlocks = this.defaultMoveable.slice()
         })
         this.controlling = [];
         for (let x = 0; x < this.grid.x; x++) {
             for (let y = 0; y < this.grid.y; y++) {
                 if ( this.map[x][y] === null) { continue }
                 if (this.map[x][y].label === "symbol_you") {
+                    console.log("found")
                     if (this.rightNeighbor(this.map[x][y], "symbol_control")) {
-                        if ( x + 2 >= this.grid.x || this.map[x + 2][y] === null) { continue }
-                        switch (this.map[x + 2][y].label) {
-                            case "symbol_player":
-                                this.setControlling("player")
-                                break
-                            case "symbol_red_player":
-                                this.setControlling("red_player")
-                            case "symbol_win":
+                        if ( x + 2 < this.grid.x && this.map[x + 2][y] !== null) {
+                            let properties = extractString(this.map[x + 2][y].label, "_")
+                            if (properties[1] === "win") {
                                 setTimeout(() => {
-                                    window.location.href="end";
+                                    this.completed = true;
                                 }, 300)
-                            default:
-                                break;
+                            }
+                            if (properties[0] === "symbol") {
+                                console.log("controlling = " + properties[1] + "_" + properties[2])
+                                this.setControlling(properties[1] + "_" + properties[2])
+                                this.setMoveable(properties[1] + "_" + properties[2], this.defaultMoveable.slice())
+                            }
                         }
                     }
                     if (this.bottomNeighbor(this.map[x][y], "symbol_control")) {
-                        if ( y + 2 >= this.grid.y || this.map[x][y + 2] === null) { continue }
-                        switch (this.map[x][y + 2].label) {
-                            case "symbol_player":
-                                this.setControlling("player")
-                                break
-                            case "symbol_red_player":
-                                this.setControlling("red_player")
-                                this.setMoveable("red_player", this.defaultMoveable.slice())
-                                break;
-                            case "symbol_win":
-                                alert("Congrats you won")
-                            default:
-                                break;
+                        if ( y + 2 < this.grid.y && this.map[x][y + 2] !== null) {
+                            console.log(this.map[x][y + 2].label)
+                            let properties = extractString(this.map[x][y + 2].label, "_")
+                            console.log(properties)
+                            if (properties[1] === "win") {
+                                setTimeout(() => {
+                                    window.location.href="end";
+                                }, 300)
+                            }
+                            if (properties[0] === "symbol") {
+                                console.log("controlling = " + properties[1] + "_" + properties[2])
+                                this.setControlling(properties[1] + "_" + properties[2])
+                                this.setMoveable(properties[1] + "_" + properties[2], this.defaultMoveable.slice())
+                            }
                         }
                     }
                 }
@@ -140,37 +155,24 @@ export class GridEngine implements Physics {
         
         for (let x = 0; x < this.grid.x; x++) {
             for (let y = 0; y < this.grid.y; y++) {
-                if ( this.map[x][y] === null) { continue }
-                switch (this.map[x][y].label) {
-                    case "symbol_player":
-                        if (this.rightNeighbor(this.map[x][y], "symbol_move")) {
-                            if ( x + 2 >= this.grid.x || this.map[x + 2][y] === null) { continue }
-                            switch (this.map[x + 2][y].label) {
-                                case "symbol_green_gate":
-                                    console.log("Hello")
-                                    this.setMoveable("player", ["green_gate"])
-                                    break
-                                default:
-                                    break;
-                            }
+                if (this.map[x][y] === null) { continue }
+                let properties = extractString(this.map[x][y].label, "_")
+                if (properties[0] === "symbol") {
+                    if (this.rightNeighbor(this.map[x][y], "symbol_move")) {
+                        if ( x + 2 >= this.grid.x || this.map[x + 2][y] === null) { continue }
+                        let objectProperties = extractString(this.map[x + 2][y].label, "_")
+                        if (objectProperties[0] === "symbol") {
+                            this.setMoveable(properties[1] + "_" + properties[2], [objectProperties[1] + "_" + objectProperties[2]])
                         }
-                        break
-                    case "symbol_red_player":
-                        if (this.rightNeighbor(this.map[x][y], "symbol_move")) {
-                            if ( x + 2 >= this.grid.x || this.map[x + 2][y] === null) { continue }
-                            switch (this.map[x + 2][y].label) {
-                                case "symbol_yellow_gate":
-                                    console.log("World")
-                                    this.setMoveable("red_player", ["yellow_gate"])
-                                    console.log(this.getBlocks("red_player"))
-                                    break
-                                default:
-                                    break;
-                            }
+                    }
+                    if (this.bottomNeighbor(this.map[x][y], "symbol_move")) {
+                        if ( y + 2 >= this.grid.y || this.map[x][y + 2] === null) { continue }
+                        let objectProperties = extractString(this.map[x][y + 2].label, "_")
+                        if (objectProperties[0] === "symbol") {
+                            this.setMoveable(properties[1] + "_" + properties[2], [objectProperties[1] + "_" + objectProperties[2]])
                         }
-                        break;
-                    default:
-                        break;
+                    }
+                    
                 }
             }
         }
@@ -312,6 +314,9 @@ export class GridEngine implements Physics {
     
     setDefaultMoveable(labels: string[]): void {
         this.defaultMoveable = labels
+        this.controlling.forEach(block => {
+            block.moveableBlocks.push(...labels)
+        })
     }
     
     gridToAbs(pos: Vector): Vector {

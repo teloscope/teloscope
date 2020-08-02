@@ -49,15 +49,14 @@ window.onload = () => {
 function create(game: Game) {
     game.input.Key.SPACE.style = 1 
     game.add.entities(load(instructionGame))
-    engine.setControlling("player")
-    // we should by default make all symbols moveable
-    engine.setDefaultMoveable(["symbol_control", "symbol_you", "symbol_move", "symbol_player", 
-        "symbol_green_gate", "symbol_red_player", "symbol_yellow_gate", "symbol_win"])
-    engine.setMoveable("player",["green_gate"])
+    engine.setControlling("black_player")
 }
 
 function update(game: Game) {
     engine.input(game.input)
+    // engine.setControlling("black_player")
+    engine.controlling = engine.getBlocks("black_player")
+    engine.setMoveable("black_player", ["green_gate", "red_gate"])
 }
 
 function load(setup: any): Entity[] {

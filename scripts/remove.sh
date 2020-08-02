@@ -7,9 +7,12 @@ echo removing game $game
 
 cd ..
 
-mkdir archive/$game
+# replace existing archive
+rm -rf archive/$game
 
-mv -rf views/$game archive/$game
+mkdir -p archive/$game
 
-mv -rf src/games/$game archive/$game
+mv views/$game/ archive/$game/views
+
+mv src/games/$game/ archive/$game/src
 
