@@ -138,7 +138,7 @@ eval("var g;\n\n// This works in non-strict mode\ng = (function() {\n\treturn th
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony default export */ __webpack_exports__[\"default\"] = (__webpack_require__.p + \"b313124b0b2142f92ed2c6ba61847d68.svg\");\n\n//# sourceURL=webpack:///./src/games/beta/assets/scale.svg?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony default export */ __webpack_exports__[\"default\"] = (__webpack_require__.p + \"/b313124b0b2142f92ed2c6ba61847d68.svg\");\n\n//# sourceURL=webpack:///./src/games/beta/assets/scale.svg?");
 
 /***/ }),
 
@@ -150,7 +150,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony default export */ 
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony default export */ __webpack_exports__[\"default\"] = (__webpack_require__.p + \"9afe369a01ffeafd56bb0955ab901deb.svg\");\n\n//# sourceURL=webpack:///./src/games/beta/assets/star.svg?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony default export */ __webpack_exports__[\"default\"] = (__webpack_require__.p + \"/9afe369a01ffeafd56bb0955ab901deb.svg\");\n\n//# sourceURL=webpack:///./src/games/beta/assets/star.svg?");
 
 /***/ }),
 
@@ -162,7 +162,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony default export */ 
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony default export */ __webpack_exports__[\"default\"] = (__webpack_require__.p + \"9776bc565143849dddc3ed48ef67a5b2.svg\");\n\n//# sourceURL=webpack:///./src/games/beta/assets/time.svg?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony default export */ __webpack_exports__[\"default\"] = (__webpack_require__.p + \"/9776bc565143849dddc3ed48ef67a5b2.svg\");\n\n//# sourceURL=webpack:///./src/games/beta/assets/time.svg?");
 
 /***/ }),
 

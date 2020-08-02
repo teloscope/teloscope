@@ -1,9 +1,11 @@
 import { Physics, Input, Vector, Body } from 'entropi';
 import { extractString } from './utils'
+import { NewData } from './data';
 
-const DEFAULT_MOVEMENT_TIME = 200 // milliseconds
 
-const ENGINE_UPDATE_INTERVAL = 20 // milliseconds
+
+export const ENGINE_UPDATE_INTERVAL = 30 // milliseconds
+const DEFAULT_MOVEMENT_TIME = 8 * ENGINE_UPDATE_INTERVAL // milliseconds
 
 const STATE_SAVE_INTERVAL = 5
 
@@ -13,27 +15,24 @@ export class GridEngine implements Physics {
     private defaultMoveable: string[] = [];
     
     private listen: boolean = true;
-    private moves: Direction[] = [];
     
     private steps: number = 0;
     
     completed: boolean = false;
+    
+    gameData = NewData()
+    
+    ruleCount: number = 0;
     
     constructor(public grid: Vector, public blockSize: Vector, public offset: Vector = {x: 0, y: 0}) {
         this.grid = grid
         this.blockSize = blockSize;
         this.offset = offset;
         this.clear()
-        // for (let x = 0; x < this.grid.x; x++) {
-        //     let column: Block[] = [];
-        //     for (let y = 0; y < this.grid.y; y++) {
-        //         column.push(null)
-        //     }
-        //     this.map.push(column)
-        // }
     }
     
     clear() {
+        this.gameData = NewData()
         this.map = [];
         for (let x = 0; x < this.grid.x; x++) {
             let column: Block[] = [];
@@ -45,6 +44,7 @@ export class GridEngine implements Physics {
     }
     
     input(input: Input): void {
+        this.gameData.playingTime += ENGINE_UPDATE_INTERVAL
         if (this.listen) {
             if (input.Key.UP.state || input.Key.W.state)  { 
                 this.push.up()
@@ -55,9 +55,13 @@ export class GridEngine implements Physics {
             } else if (input.Key.RIGHT.state || input.Key.D.state) { 
                 this.push.right()
             } else if (input.Key.ENTER.state) { // full reset
+                this.gameData.restarts++
                 this.reset()
             } else if (input.Key.SPACE.state) { // revert to last state
+                this.gameData.undos++
                 this.restoreState()
+            } else {
+                this.gameData.idleTime += ENGINE_UPDATE_INTERVAL
             }
         }
     }
@@ -111,6 +115,7 @@ export class GridEngine implements Physics {
         this.controlling.forEach(node => {
             node.moveableBlocks = this.defaultMoveable.slice()
         })
+        let ruleCount = 0;
         this.controlling = [];
         for (let x = 0; x < this.grid.x; x++) {
             for (let y = 0; y < this.grid.y; y++) {
@@ -121,11 +126,13 @@ export class GridEngine implements Physics {
                         if ( x + 2 < this.grid.x && this.map[x + 2][y] !== null) {
                             let properties = extractString(this.map[x + 2][y].label, "_")
                             if (properties[1] === "win") {
+                                ruleCount++
                                 setTimeout(() => {
                                     this.completed = true;
                                 }, 300)
                             }
                             if (properties[0] === "symbol") {
+                                ruleCount++
                                 console.log("controlling = " + properties[1] + "_" + properties[2])
                                 this.setControlling(properties[1] + "_" + properties[2])
                                 this.setMoveable(properties[1] + "_" + properties[2], this.defaultMoveable.slice())
@@ -138,11 +145,13 @@ export class GridEngine implements Physics {
                             let properties = extractString(this.map[x][y + 2].label, "_")
                             console.log(properties)
                             if (properties[1] === "win") {
+                                ruleCount++
                                 setTimeout(() => {
                                     window.location.href="end";
                                 }, 300)
                             }
                             if (properties[0] === "symbol") {
+                                ruleCount++
                                 console.log("controlling = " + properties[1] + "_" + properties[2])
                                 this.setControlling(properties[1] + "_" + properties[2])
                                 this.setMoveable(properties[1] + "_" + properties[2], this.defaultMoveable.slice())
@@ -162,6 +171,7 @@ export class GridEngine implements Physics {
                         if ( x + 2 >= this.grid.x || this.map[x + 2][y] === null) { continue }
                         let objectProperties = extractString(this.map[x + 2][y].label, "_")
                         if (objectProperties[0] === "symbol") {
+                            ruleCount++
                             this.setMoveable(properties[1] + "_" + properties[2], [objectProperties[1] + "_" + objectProperties[2]])
                         }
                     }
@@ -169,6 +179,7 @@ export class GridEngine implements Physics {
                         if ( y + 2 >= this.grid.y || this.map[x][y + 2] === null) { continue }
                         let objectProperties = extractString(this.map[x][y + 2].label, "_")
                         if (objectProperties[0] === "symbol") {
+                            ruleCount++
                             this.setMoveable(properties[1] + "_" + properties[2], [objectProperties[1] + "_" + objectProperties[2]])
                         }
                     }
@@ -176,6 +187,11 @@ export class GridEngine implements Physics {
                 }
             }
         }
+        // check if the user has formed a new sentence / rule
+        if (ruleCount === this.ruleCount + 1) {
+            this.gameData.sentenceFormedTime.push(this.gameData.playingTime)
+        }
+        this.ruleCount = ruleCount
     }
     
     rightNeighbor(block: Block, label: string): boolean {
@@ -199,10 +215,10 @@ export class GridEngine implements Physics {
         down: (): void => {
             this.move({x: 0, y: 1})
         }
-        
     }
     
     move(ref: Vector) {
+        this.gameData.moves++
         this.controlling.forEach(block => {
             let directionFrom = Direction.Right
             if (ref.x === 1) { directionFrom = Direction.Left }

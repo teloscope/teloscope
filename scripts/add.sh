@@ -33,6 +33,10 @@ cp views/review_template.pug views/$game
 
 mv views/$game/review_template.pug views/$game/review.pug
 
+mv game/router.js routes/games/$game.js
+
+# gsed -i'' -E "s|res.render('|&"$game"/|" routes/games/$game.js
+
 find views/$game -type f -name "*.pug" -exec perl -i -pe's/extends header/extends ..\/header/g' {} \;
 
 rm -rf game

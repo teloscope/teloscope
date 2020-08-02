@@ -1,7 +1,7 @@
 import { Game, Entity, Controller, Vector } from 'entropi';
 import { PaperScope, Size, Path, Point, Color, Group, Rectangle } from 'paper'
 import { PaperRenderer } from './renderer'
-import { GridEngine, Block } from './physics'
+import { GridEngine, Block, ENGINE_UPDATE_INTERVAL } from './physics'
 import { config } from './config'
 import game1 from './game1.json'
 import game2 from './game2.json'
@@ -32,7 +32,7 @@ window.onload = () => {
         create: create,
         update: update,
         options: [
-            Game.withFrameRate(30),
+            Game.withFrameRate(ENGINE_UPDATE_INTERVAL),
             Game.withBackGroundColor(0xeeeeee),
         ]
     })
@@ -48,24 +48,11 @@ function create(game: Game) {
 }
 
 function update(game: Game) {
-
-    if (game.time.tick % 10 == 0) {
-        let url = paper.view.element.toDataURL("image/webp")
-        console.log("sending snapshot")
-        axios.post('/dev/delta/game', { 
-            data: url,
-            headers: {
-                'Content-Type': 'image/webp'
-            }
-        })
-            .then((response) => {
-                console.log(response.status + ": " + response.data.message)
-            })
-    }
-
     engine.input(game.input)
     if (engine.completed) {
         engine.completed = false; 
+        // send game data to the server
+        axios.post(config.server, engine.gameData)
         currentGame++;
         engine.clear()
         game.entities.forEach(entity => {

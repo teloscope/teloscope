@@ -16,3 +16,5 @@ mv views/$game/ archive/$game/views
 
 mv src/games/$game/ archive/$game/src
 
+mv routes/games/$game.js archive/$game/routes
+

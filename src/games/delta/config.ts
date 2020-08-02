@@ -16,5 +16,8 @@ export const config = {
     //movement
     margin: 200,
     force: 0.004,
+    
+    // for sending game data
+    server: "/dev/delta/game"
 
 }

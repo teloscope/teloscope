@@ -203,7 +203,7 @@ function addActionBar(): void {
                     currentPetriNet.graphic.visible = false;
                     congratulations.visible = true;
                 } else {
-                    window.location.href = "/end";
+                    window.location.href = "/dev/gamma/review";
                 }
             }, 1000)
         }

@@ -3,6 +3,8 @@ module.exports = {
     mode: 'development',
     watch: false,
     entry: {
+		gamma: './src/games/gamma/game.ts', 
+		// gamma_instructions: './src/games/gamma/instructions.ts',
 		beta: './src/games/beta/game.ts', 
 		beta_instructions: './src/games/beta/instructions.ts',
         alpha: './src/games/alpha/game.ts',
@@ -26,9 +28,10 @@ module.exports = {
             },
             {
                 test: /\.(png|svg|jpg|gif)$/,
-                use: [
-                    'file-loader',
-                ],
+                loader: 'file-loader',
+                options: {
+                    name: '/[contenthash].[ext]',
+                },
             },
         ],
     },
