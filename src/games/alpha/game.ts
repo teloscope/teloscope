@@ -23,7 +23,7 @@ let startTimer = false;
 window.onload = () => {
 
     paper.install(window);
-    const paperCanvas = document.createElement("canvas");
+    const paperCanvas = <HTMLCanvasElement> document.getElementById("gameCanvas");
     paperCanvas.width = screen.width;
     paperCanvas.height = screen.height;
     document.body.appendChild(paperCanvas);

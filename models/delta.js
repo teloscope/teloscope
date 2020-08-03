@@ -6,7 +6,7 @@ const DeltaSchema = new mongoose.Schema({
     undos: Number,
     restarts: Number,
     idleTime: Number,
-    sentenceFormedTime: [Number]
+    sentenceFormedTime: [Number],
 })
 
 module.exports = mongoose.model('DeltaData', DeltaSchema);
