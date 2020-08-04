@@ -2,9 +2,9 @@ const express = require('express');
 const router = express.Router();
 // const getUserID = require('../utils')
 const DeltaData = require('../../models/delta')
+const DeltaReview = require('../../models/delta')
 
 router.get('/', function(req, res, next) {
-    _ = getUserID(req, res)
     res.redirect('/dev/delta/instructions')
 });
 
@@ -37,6 +37,22 @@ router.post('/game', function(req, res, next) {
 router.get('/review', function(req, res, next) {
     res.render('delta/review', {game: "delta"});
 });
+
+router.post('/review', function(req, res, next) {
+    console.log("received review")
+    let user = getUserID(req, res)
+    let review = new DeltaReview({
+        user: user,
+        learningRate: parseInt(req.body.learningRate),
+        difficulty: parseInt(req.body.difficulty),
+        testing: req.body.testing,
+        performance: parseInt(req.body.performance),
+        improvements: req.body.improvements,
+        overall: parseInt(req.body.overall),
+    })
+    review.save()
+    res.render('assessment.pug')
+})
 
 function getUserID(req, res) {
     user = req.cookies.get('user')

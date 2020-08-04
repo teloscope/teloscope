@@ -1,17 +1,7 @@
 const mongoose = require('mongoose')
 
-const DeltaData = new mongoose.Schema({
-    user: String,
-    playingTime: Number,
-    undos: Number,
-    restarts: Number,
-    idleTime: Number,
-    sentenceFormedTime: [Number],
-})
-
-
 // NOTE: multi-choice questions are provided as a number from 1 - 5
-const DeltaReview = new mongoose.Schema({
+const AlphaReview = new mongoose.Schema({
     user: String,
     // How quickly do you think you learned how to solve the challenges?
     learningRate: Number,
@@ -27,7 +17,4 @@ const DeltaReview = new mongoose.Schema({
     overall: Number,
 })
 
-module.exports = {
-    DeltaData: mongoose.model('DeltaData', DeltaData),
-    DeltaReview: mongoose.model('DeltaReview', DeltaReview)
-}
+module.exports = mongoose.model('AlphaReview', AlphaReview)

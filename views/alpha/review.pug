@@ -7,89 +7,88 @@ block body
     h3 Thanks for completing the alpha game. Now let us know what you thought.
     br
 
-    form
-        div
-            p How quickly do you think you learned how to solve the challenges?
-            table
-                tr
-                    td
-                        input(type="radio" id="formControlRange")
-                        label(for="formControlRange") Really Slowly
-                    td
-                        input(type="radio" id="formControlRange")
-                        label(for="formControlRange") Slowly
-                    td
-                        input(type="radio" id="formControlRange")
-                        label(for="formControlRange") Average
-                    td
-                        input(type="radio" id="formControlRange")
-                        label(for="formControlRange") Quick
-                    td
-                        input(type="radio" id="formControlRange")
-                        label(for="formControlRange") Really Quick
-            br
-            p How difficult did you find the game?
-            table
-                tr
-                    td
-                        input(type="radio" id="formControlRange")
-                        label(for="formControlRange") Really Hard
-                    td
-                        input(type="radio" id="formControlRange")
-                        label(for="formControlRange") Hard
-                    td
-                        input(type="radio" id="formControlRange")
-                        label(for="formControlRange") Okay
-                    td
-                        input(type="radio" id="formControlRange")
-                        label(for="formControlRange") Easy
-                    td
-                        input(type="radio" id="formControlRange")
-                        label(for="formControlRange") Really Easy
-            br
-            p At a guess, what skills do you think the game was testing?
-            input(type="text" class="response")
-            br
-            p How well do you think you performed in the game?
-            table
-                tr
-                    td
-                        input(type="radio" id="formControlRange")
-                        label(for="formControlRange") Bad
-                    td
-                        input(type="radio" id="formControlRange")
-                        label(for="formControlRange") Below Average
-                    td
-                        input(type="radio" id="formControlRange")
-                        label(for="formControlRange") Average
-                    td
-                        input(type="radio" id="formControlRange")
-                        label(for="formControlRange") Above Average
-                    td
-                        input(type="radio" id="formControlRange")
-                        label(for="formControlRange") Really Well
-            br
-            p What did you not like about the game or think could be improved?
-            textarea(type="text" class="response" rows=3)
-            br
-            p Overall, what did you think of the game?
-            table
-                tr
-                    td
-                        input(type="radio" id="formControlRange")
-                        label(for="formControlRange") Really Bad
-                    td
-                        input(type="radio" id="formControlRange")
-                        label(for="formControlRange") Bad
-                    td
-                        input(type="radio" id="formControlRange")
-                        label(for="formControlRange") Average
-                    td
-                        input(type="radio" id="formControlRange")
-                        label(for="formControlRange") Good
-                    td
-                        input(type="radio" id="formControlRange")
-                        label(for="formControlRange") Really Good
+    form(method="POST")
+        p How quickly do you think you learned how to solve the challenges?
+        table
+            tr
+                td
+                    input(type="radio" name="learning" value=1 id="form")
+                    label(for="form") Really Slowly
+                td
+                    input(type="radio" name="learning" value=2 id="form")
+                    label(for="form") Slowly
+                td
+                    input(type="radio" name="learning" value=3 id="form")
+                    label(for="form") Average
+                td
+                    input(type="radio" name="learning" value=4 id="form")
+                    label(for="form") Quick
+                td
+                    input(type="radio" name="learning" value=5 id="form")
+                    label(for="form") Really Quick
+        br
+        p How difficult did you find the game?
+        table
+            tr
+                td
+                    input(type="radio" id="form")
+                    label(for="form") Really Hard
+                td
+                    input(type="radio" id="form")
+                    label(for="form") Hard
+                td
+                    input(type="radio" id="form")
+                    label(for="form") Okay
+                td
+                    input(type="radio" id="form")
+                    label(for="form") Easy
+                td
+                    input(type="radio" id="form")
+                    label(for="form") Really Easy
+        br
+        p At a guess, what skills do you think the game was testing?
+        input(type="text" class="response")
+        br
+        p How well do you think you performed in the game?
+        table
+            tr
+                td
+                    input(type="radio" id="form")
+                    label(for="form") Bad
+                td
+                    input(type="radio" id="form")
+                    label(for="form") Below Average
+                td
+                    input(type="radio" id="form")
+                    label(for="form") Average
+                td
+                    input(type="radio" id="form")
+                    label(for="form") Above Average
+                td
+                    input(type="radio" id="form")
+                    label(for="form") Really Well
+        br
+        p What did you not like about the game or think could be improved?
+        textarea(type="text" class="response" rows=3)
+        br
+        p Overall, what did you think of the game?
+        table
+            tr
+                td
+                    input(type="radio" id="form")
+                    label(for="form") Really Bad
+                td
+                    input(type="radio" id="form")
+                    label(for="form") Bad
+                td
+                    input(type="radio" id="form")
+                    label(for="form") Average
+                td
+                    input(type="radio" id="form")
+                    label(for="form") Good
+                td
+                    input(type="radio" id="form")
+                    label(for="form") Really Good
 
-            br
-        button(type="submit") Submit
+        br
+        button(type="submit" value="Submit") Submit
