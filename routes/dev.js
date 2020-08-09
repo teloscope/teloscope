@@ -51,4 +51,16 @@ router.post('/assessment', function(req, res, next) {
   res.status(200).send({"message": "Successfully submitted assessment"})
 })
 
+router.get('/closing', function (req, res) {
+  res.render('closing.pug')
+})
+
+router.post('/closing', function (req, res) {
+  console.log("received survey")
+  /*
+    TO BE COMPLETED
+  */
+  res.status(200).send({"message": "Successfully submitted assessment"})
+})
+
 module.exports = router;

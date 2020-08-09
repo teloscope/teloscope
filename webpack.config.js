@@ -4,7 +4,7 @@ module.exports = {
     watch: false,
     entry: {
 		gamma: './src/games/gamma/game.ts', 
-		// gamma_instructions: './src/games/gamma/instructions.ts',
+		gamma_instructions: './src/games/gamma/instructions.ts',
 		beta: './src/games/beta/game.ts', 
 		beta_instructions: './src/games/beta/instructions.ts',
         alpha: './src/games/alpha/game.ts',

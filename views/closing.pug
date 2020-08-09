@@ -1,0 +1,38 @@
+extends header
+
+block header
+  link(rel='stylesheet', href='/stylesheets/forms.css')
+
+block body
+  h3 Thank you very much for trialing out our games
+
+  p
+    | Just before you go we have a few more rather open-ended and purely optional questions for you to answer.
+  br
+  hr
+  br
+
+  form(method="POST")
+    p What do you think of games as a tool for assessing someone's competency for a role. What do you think are the strengths and weaknesses?
+    textarea(types="text", class="response", rows=3)
+    br
+
+    p What would you like to see more of generally when it comes to recruitment? What would you like to see less of?
+    textarea(types="text", class="response", rows=3)
+    br
+
+    p 
+      | What do you think of the prospect of multiplayer games? Do you think it may be valuable to peer team members and candidates together to see how a
+      | candidate might work in the existing team?
+
+    input(type="text", class="response")
+
+    p Do you have a game or idea in mind that you think might be interesting to use in this context?
+    textarea(types="text", class="response", rows=3)
+    br
+
+    p Any final remarks?
+    textarea(types="text", class="response", rows=3)
+    br
+
+    button(type="submit", value="Submit") Submit

@@ -8,9 +8,9 @@ export namespace Settings {
     
     // Color Scheme
     export const color = {
-        inputNode: new Color('red'),
-        intermediateNode: new Color('green'),
-        goalNode: new Color('blue'),
+        inputNode: new Color('#f56c5d'),
+        intermediateNode: new Color('#81ed47'),
+        goalNode: new Color('#78d0ff'),
         token: new Color('black'),
         symbol: new Color(0.3, 0.3, 0.3, 1)
     }

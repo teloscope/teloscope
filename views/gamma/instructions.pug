@@ -1,10 +1,16 @@
 extends ../header.pug
 
 block header
-  //- script(src="instructions.js")
+  script(src="/gamma_instructions.js")
 
 block body
   h3 Instructions
   p 
-    | Add instructions here
-  a(href="/dev/gamma/game") Start
+    | This game is designed to assess your ability to understand a simple system. You will be given three different such systems where you will place tokens
+    | in any of the input (red) circles and then observe what the corresponding pattern of output is. The ultimate goal is to get a set amount of tokens in the goal
+    | (blue) circle. Note that the way the system behaves is intentionally designed to be opaque and your job is to experiment in order to understand it.
+    | Below is an example of a simple system for you to play around with.
+  canvas(id="instructionsCanvas")
+  p
+    | These challenges are not timed. When you are ready to proceed press start.
+  a(href="/dev/gamma/game" class="button") Start

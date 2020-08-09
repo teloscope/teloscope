@@ -26,7 +26,6 @@ window.onload = () => {
     const paperCanvas = <HTMLCanvasElement> document.getElementById("gameCanvas");
     paperCanvas.width = screen.width;
     paperCanvas.height = screen.height;
-    document.body.appendChild(paperCanvas);
     paper.setup(paperCanvas);
 
     followController = new FollowController(lastClicked);

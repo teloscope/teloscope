@@ -10,14 +10,14 @@ import puzzle3 from './puzzle3.json'
 
 let paper = new PaperScope()
 let puzzleLayer: any
-let gameResetFlag: boolean = true
+// let gameResetFlag: boolean = true
 let gameNumber: number = 0 // this also dictates the starting puzzle 
-let petriNetSetups = [puzzle1, puzzle2, puzzle3];
+const petriNetSetups = [puzzle1, puzzle2, puzzle3];
 let currentPetriNet: PetriNet;
 
 window.onload = () => {
     paper.install(window)
-    let paperCanvas = <HTMLCanvasElement> document.getElementById('gameCanvas')
+    const paperCanvas = <HTMLCanvasElement> document.getElementById('gameCanvas')
     paperCanvas.width = Settings.screen.width;
     paperCanvas.height = Settings.screen.height;
     document.body.style.width = Settings.screen.width.toString()
@@ -29,11 +29,10 @@ window.onload = () => {
     })
     currentPetriNet = loadPuzzle(petriNetSetups[gameNumber])
     currentPetriNet.graphic.visible = true;
-    addActionBar()
-    // designPuzzles()
+    addActionBar(puzzleLayer, currentPetriNet)
 }
 
-function loadPuzzle(setup: any): PetriNet {
+export function loadPuzzle(setup: any): PetriNet {
     console.log(setup)
     let petriNet = new PetriNet(new Size(setup.grid.width as number, setup.grid.height as number), setup.tokens as number)
     console.log("Nodes: " + petriNet.nodes.length)
@@ -44,7 +43,7 @@ function loadPuzzle(setup: any): PetriNet {
     return petriNet
 }
 
-function addActionBar(): void {
+export function addActionBar(puzzleLayer: paper.Layer, petriNet: PetriNet): void {
 
     let actionBar = new Group()
     
@@ -65,10 +64,10 @@ function addActionBar(): void {
             })
             stepBackward.addChildren([rectangle, item, text])
             stepBackward.onClick = (e: any) => {
-                if (currentPetriNet.graphic.visible) {
-                    currentPetriNet.gameRunning = true
-                    currentPetriNet.gameReset = false
-                    currentPetriNet.applyRules()
+                if (petriNet.graphic.visible) {
+                    petriNet.gameRunning = true
+                    petriNet.gameReset = false
+                    petriNet.applyRules()
                 }
             }
             actionBar.addChild(stepBackward)
@@ -93,10 +92,10 @@ function addActionBar(): void {
             })
             stepForward.addChildren([rectangle, item, text])
             stepForward.onClick = (e: any) => {
-                if (currentPetriNet.graphic.visible) {
-                    currentPetriNet.gameRunning = true
-                    currentPetriNet.gameReset = false
-                    currentPetriNet.applyRules()
+                if (petriNet.graphic.visible) {
+                    petriNet.gameRunning = true
+                    petriNet.gameReset = false
+                    petriNet.applyRules()
                 }
             }
             actionBar.addChild(stepForward)
@@ -122,10 +121,10 @@ function addActionBar(): void {
         
             reset.addChildren([rectangle, item, text])            
             reset.onClick = (event: any) => {
-                if (currentPetriNet.graphic.visible) {
-                    currentPetriNet.deleteAllTokens()
-                    gameResetFlag = true
-                    currentPetriNet.gameReset = true
+                if (petriNet.graphic.visible) {
+                    petriNet.deleteAllTokens()
+                    // gameResetFlag = true
+                    petriNet.gameReset = true
                 }
             }
             actionBar.addChild(reset)
@@ -145,7 +144,7 @@ function addActionBar(): void {
     
     let tokenCountText = new PointText({
         position: [536, 45],
-        content: currentPetriNet.tokensLeft.toString(),
+        content: petriNet.tokensLeft.toString(),
         fontSize: 28,
         fontFamily: 'Open Sans',
         // strokeWidth: 0.2,
@@ -164,7 +163,7 @@ function addActionBar(): void {
 
     nextText.onClick = (event: any) => {
         congratulations.visible = false;
-        currentPetriNet.graphic.visible = true;
+        petriNet.graphic.visible = true;
         actionBar.visible = true;
     }
     
@@ -190,17 +189,17 @@ function addActionBar(): void {
     congratulations.visible = false;
 
     setInterval(() => {
-        tokenCountText.content = currentPetriNet.tokensLeft.toString()  
-        if (currentPetriNet.completed) {
+        tokenCountText.content = petriNet.tokensLeft.toString()  
+        if (petriNet.completed) {
             gameNumber++;
             actionBar.visible = false
-            currentPetriNet.completed = false;
+            petriNet.completed = false;
             setTimeout(() => {
-                currentPetriNet.deleteAllTokens()
-                currentPetriNet.graphic.visible = false;
+                petriNet.deleteAllTokens()
+                petriNet.graphic.visible = false;
                 if (gameNumber < petriNetSetups.length) {
-                    currentPetriNet = loadPuzzle(petriNetSetups[gameNumber])
-                    currentPetriNet.graphic.visible = false;
+                    petriNet = loadPuzzle(petriNetSetups[gameNumber])
+                    petriNet.graphic.visible = false;
                     congratulations.visible = true;
                 } else {
                     window.location.href = "/dev/gamma/review";
