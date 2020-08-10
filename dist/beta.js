@@ -162,7 +162,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony default export */ 
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony default export */ __webpack_exports__[\"default\"] = (__webpack_require__.p + \"/2404d70b780ff51d292bce72914ca366.svg\");\n\n//# sourceURL=webpack:///./src/games/beta/assets/time.svg?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony default export */ __webpack_exports__[\"default\"] = (__webpack_require__.p + \"/9776bc565143849dddc3ed48ef67a5b2.svg\");\n\n//# sourceURL=webpack:///./src/games/beta/assets/time.svg?");
 
 /***/ }),
 

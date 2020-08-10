@@ -14,4 +14,4 @@ const ClosingReview = new mongoose.Schema({
     finalRemarks: String,
 })
 
-module.exports = mongoose.model('ClosingReview', DeltaReview)
+module.exports = mongoose.model('ClosingReview', ClosingReview)

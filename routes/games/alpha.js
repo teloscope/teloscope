@@ -27,13 +27,14 @@ router.post('/review', function(req, res, next) {
     const user = getUserID(req, res)
     let review = new AlphaReview({
         user: user,
-        learningRate: (req.body.learningRate) ? parseInt(req.body.learningRate) : 0,
+        learningRate: (req.body.learning) ? parseInt(req.body.learning) : 0,
         difficulty: (req.body.difficulty) ? parseInt(req.body.difficulty) : 0,
         testing: req.body.testing,
         performance: (req.body.performance) ? parseInt(req.body.performance) : 0,
         improvements: req.body.improvements,
         overall: (req.body.overall) ? parseInt(req.body.overall): 0,
     })
+    console.log(review)
     review.save()
     res.render('beta/instructions.pug', {game: "beta"})
 })

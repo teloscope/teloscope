@@ -57,6 +57,7 @@ router.get('/closing', function (req, res) {
 
 router.post('/closing', function (req, res) {
   console.log("received survey")
+  console.log(req.body)
   /*
     TO BE COMPLETED
   */
