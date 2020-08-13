@@ -21,19 +21,22 @@ router.get('/review', function(req, res, next) {
     res.render('beta/review.pug', {game: "beta"});
 });
 
-router.post('/review', function(req, res, next) {
+router.post('/review', async function(req, res, next) {
     console.log("received review")
     let user = getUserID(req, res)
-    let review = new BetaReview({
-        user: user,
-        learningRate: parseInt(req.body.learningRate),
-        difficulty: parseInt(req.body.difficulty),
-        testing: req.body.testing,
-        performance: parseInt(req.body.performance),
-        improvements: req.body.improvements,
-        overall: parseInt(req.body.overall),
-    })
-    review.save()
+    let review = await BetaReview.find({user: user})
+    if (review === null) {
+        review = new BetaReview({
+            user: user,
+            learningRate: (req.body.learning) ? parseInt(req.body.learning) : 0,
+            difficulty: (req.body.difficulty) ? parseInt(req.body.difficulty) : 0,
+            testing: req.body.testing,
+            performance: (req.body.performance) ? parseInt(req.body.performance) : 0,
+            improvements: req.body.improvements,
+            overall: (req.body.overall) ? parseInt(req.body.overall): 0,
+        })
+        review.save()
+    }
     res.render('gamma/instructions.pug', {game: "gamma"})
 })
 

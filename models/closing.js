@@ -5,11 +5,11 @@ const ClosingReview = new mongoose.Schema({
     // What do you think of games as a tool for assessing someone's competency for a role. What do you think are the strengths and weaknesses?
     strengthAndWeaknesses: String,
     // What would you like to see more of generally when it comes to recruitment? What would you like to see less of?
-    recruitment: Number,
+    recruitment: String,
     // What do you think of the prospect of multiplayer games?
     multiplayer: String,
     // Do you have a game or idea in mind that you think might be interesting to use in this context?
-    gameIdea: Number,
+    gameIdea: String,
     // Any final remarks?
     finalRemarks: String,
 })

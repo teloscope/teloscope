@@ -18,11 +18,15 @@ router.get('/game', function(req, res, next) {
     res.render('delta/game', {game: "delta"});
 });
 
-router.post('/game', function(req, res, next) {
+router.post('/game', async function(req, res, next) {
     console.log("received data:")
     console.log(req.body)
     user = getUserID(req, res)
-    let data = new DeltaData({
+    let data = await DeltaData.find({user: user})
+    if (data !== null) {
+        return res.status(200).send({"message": "Already received data from user for delta game"})
+    }
+    data = new DeltaData({
         user: user,
         playingTime: req.body.playingTime,
         undos: req.body.undos,
@@ -31,27 +35,31 @@ router.post('/game', function(req, res, next) {
         sentenceFormedTime: req.body.sentenceFormedTime,
     })
     data.save()
-    res.status(200).send({"message": "Successfully saved user data"})
+    return res.status(200).send({"message": "Successfully saved user data for delta game"})
 })
 
 router.get('/review', function(req, res, next) {
     res.render('delta/review', {game: "delta"});
 });
 
-router.post('/review', function(req, res, next) {
+router.post('/review', async function(req, res) {
     console.log("received review")
     let user = getUserID(req, res)
-    let review = new DeltaReview({
-        user: user,
-        learningRate: parseInt(req.body.learningRate),
-        difficulty: parseInt(req.body.difficulty),
-        testing: req.body.testing,
-        performance: parseInt(req.body.performance),
-        improvements: req.body.improvements,
-        overall: parseInt(req.body.overall),
-    })
-    review.save()
-    res.render('assessment.pug')
+    // check that the user hasn't already submitted a review
+    let review = await DeltaReview.find({user: user})
+    if (review === null) {
+        review = new DeltaReview({
+            user: user,
+            learningRate: (req.body.learning) ? parseInt(req.body.learning) : 0,
+            difficulty: (req.body.difficulty) ? parseInt(req.body.difficulty) : 0,
+            testing: req.body.testing,
+            performance: (req.body.performance) ? parseInt(req.body.performance) : 0,
+            improvements: req.body.improvements,
+            overall: (req.body.overall) ? parseInt(req.body.overall): 0,
+        })
+        review.save()
+    }
+    return res.render('assessment.pug')
 })
 
 function getUserID(req, res) {

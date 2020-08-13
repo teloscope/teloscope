@@ -9,6 +9,7 @@ const gammaRouter = require('./games/gamma')
 const deltaRouter = require('./games/delta')
 const uuid = require('uuid');
 const { route } = require('./games/beta');
+const ClosingReview = require('../models/closing')
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -35,33 +36,49 @@ router.use('/gamma', gammaRouter)
 
 router.use('/delta', deltaRouter)
 
-router.get('/assessment', function(req, res, next) {
-  if (req.cookies.get('user')) {
-    res.render('assessment.pug');
-  } else {
-    res.redirect('/dev/intro')
-  }
-});
+// TODO: add self assessment
+// router.get('/assessment', function(req, res, next) {
+//   if (req.cookies.get('user')) {
+//     res.render('assessment.pug');
+//   } else {
+//     res.redirect('/dev/intro')
+//   }
+// });
 
-router.post('/assessment', function(req, res, next) {
-  console.log("received assessment")
-  /*
-    TO BE COMPLETED
-  */
-  res.status(200).send({"message": "Successfully submitted assessment"})
-})
+// router.post('/assessment', function(req, res, next) {
+//   console.log("received assessment")
+//   /*
+//     TO BE COMPLETED
+//   */
+//   res.status(200).send({"message": "Successfully submitted assessment"})
+// })
 
 router.get('/closing', function (req, res) {
   res.render('closing.pug')
 })
 
-router.post('/closing', function (req, res) {
+router.post('/closing', async function (req, res) {
   console.log("received survey")
-  console.log(req.body)
-  /*
-    TO BE COMPLETED
-  */
-  res.status(200).send({"message": "Successfully submitted assessment"})
+  let user = req.cookies.get('user')
+  if (!user) {
+      res.redirect('/dev/intro')
+  }
+  let review = await ClosingReview.find({user: user})
+  if (review !== null) {
+    console.log("You have already submitted a review")
+    return res.render('closing.pug')
+  }
+  review = new ClosingReview({
+      user: user,
+      strengthAndWeaknesses: req.body.strengthAndWeaknesses,
+      recruitment: req.body.recruitment,
+      multiplayer: req.body.multiplayer,
+      gameIdea: req.body.gameIdea,
+      finalRemarks: req.body.finalRemarks,
+  })
+  console.log(review)
+  review.save()
+  return res.render('closing.pug')
 })
 
 module.exports = router;

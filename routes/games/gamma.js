@@ -21,19 +21,23 @@ router.get('/review', function(req, res, next) {
     res.render('gamma/review.pug', {game: "gamma"});
 });
 
-router.post('/review', function(req, res, next) {
+router.post('/review', async function(req, res, next) {
     console.log("received review")
     let user = getUserID(req, res)
-    let review = new GammaReview({
-        user: user,
-        learningRate: (req.body.learningRate) ? parseInt(req.body.learningRate) : 0,
-        difficulty: parseInt(req.body.difficulty),
-        testing: req.body.testing,
-        performance: parseInt(req.body.performance),
-        improvements: req.body.improvements,
-        overall: parseInt(req.body.overall),
-    })
-    review.save()
+    // check to see if the user has already done the review
+    let review = await GammaReview.find({user: user})
+    if (review === null) {
+        review = new GammaReview({
+            user: user,
+            learningRate: (req.body.learning) ? parseInt(req.body.learning) : 0,
+            difficulty: (req.body.difficulty) ? parseInt(req.body.difficulty) : 0,
+            testing: req.body.testing,
+            performance: (req.body.performance) ? parseInt(req.body.performance) : 0,
+            improvements: req.body.improvements,
+            overall: (req.body.overall) ? parseInt(req.body.overall): 0,
+        })
+        review.save()
+    }
     res.render('delta/instructions.pug', {game: "delta"})
 })
 

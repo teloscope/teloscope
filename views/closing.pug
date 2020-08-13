@@ -14,25 +14,25 @@ block body
 
   form(method="POST")
     p What do you think of games as a tool for assessing someone's competency for a role. What do you think are the strengths and weaknesses?
-    textarea(types="text", class="response", rows=3)
+    textarea(types="text", name="strengthAndWeaknesses" class="response", rows=3)
     br
 
     p What would you like to see more of generally when it comes to recruitment? What would you like to see less of?
-    textarea(types="text", class="response", rows=3)
+    textarea(types="text", name="recruitment" class="response", rows=3)
     br
 
     p 
       | What do you think of the prospect of multiplayer games? Do you think it may be valuable to peer team members and candidates together to see how a
       | candidate might work in the existing team?
 
-    input(type="text", class="response")
+    textarea(type="text", name="multiplayer" class="response" rows=3)
 
     p Do you have a game or idea in mind that you think might be interesting to use in this context?
-    textarea(types="text", class="response", rows=3)
+    textarea(types="text", name="gameIdea" class="response", rows=3)
     br
 
     p Any final remarks?
-    textarea(types="text", class="response", rows=3)
+    textarea(types="text", name="finalRemarks" class="response", rows=3)
     br
 
     button(type="submit", value="Submit") Submit

@@ -1,4 +1,94 @@
-extends ../header
+extends ../header.pug
+
+block header
+    link(rel='stylesheet', href='/stylesheets/forms.css')
 
 block body
-  p Welcome to Teloscope
+    h3 Thanks for completing the delta game. Now let us know what you thought.
+    br
+
+    form(method="POST")
+        p How quickly do you think you learned how to solve the challenges?
+        table
+            tr
+                td
+                    input(type="radio" name="learning" value=1 id="learning")
+                    label(for="learning") Really Slowly
+                td
+                    input(type="radio" name="learning" value=2 id="learning")
+                    label(for="learning") Slowly
+                td
+                    input(type="radio" name="learning" value=3 id="learning")
+                    label(for="learning") Average
+                td
+                    input(type="radio" name="learning" value=4 id="learning")
+                    label(for="learning") Quick
+                td
+                    input(type="radio" name="learning" value=5 id="learning")
+                    label(for="learning") Really Quick
+        br
+        p How difficult did you find the game?
+        table
+            tr
+                td
+                    input(type="radio" name="difficulty" value=1 id="difficulty")
+                    label(for="difficulty") Really Hard
+                td
+                    input(type="radio" name="difficulty" value=2 id="difficulty")
+                    label(for="difficulty") Hard
+                td
+                    input(type="radio" name="difficulty" value=3 id="difficulty")
+                    label(for="difficulty") Okay
+                td
+                    input(type="radio" name="difficulty" value=4 id="difficulty")
+                    label(for="difficulty") Easy
+                td
+                    input(type="radio" name="difficulty" value=5 id="difficulty")
+                    label(for="difficulty") Really Easy
+        br
+        p At a guess, what skills do you think the game was testing?
+        input(type="text" name="testing" class="response")
+        br
+        p How well do you think you performed in the game?
+        table
+            tr
+                td
+                    input(type="radio" name="performance" value=1 id="performance")
+                    label(for="performance") Bad
+                td
+                    input(type="radio" name="performance" value=2 id="performance")
+                    label(for="performance") Below Average
+                td
+                    input(type="radio" name="performance" value=3 id="performance")
+                    label(for="performance") Average
+                td
+                    input(type="radio" name="performance" value=4 id="performance")
+                    label(for="performance") Above Average
+                td
+                    input(type="radio" name="performance" value=5 id="performance")
+                    label(for="performance") Really Well
+        br
+        p What did you not like about the game or think could be improved?
+        textarea(type="text" name="improvements" class="response" rows=3)
+        br
+        p Overall, what did you think of the game?
+        table
+            tr
+                td
+                    input(type="radio" name="overall" value=1 id="overall")
+                    label(for="overall") Really Bad
+                td
+                    input(type="radio" name="overall" value=2 id="overall")
+                    label(for="overall") Bad
+                td
+                    input(type="radio" name="overall" value=3 id="overall")
+                    label(for="overall") Average
+                td
+                    input(type="radio" name="overall" value=4 id="overall")
+                    label(for="overall") Good
+                td
+                    input(type="radio" name="overall" value=5 id="overall")
+                    label(for="overall") Really Good
+
+        br
+        button(type="submit" value="Submit") Submit
