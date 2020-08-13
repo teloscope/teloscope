@@ -25,6 +25,8 @@ const DeltaReview = new mongoose.Schema({
     improvements: String,
     // Overall, what did you think of the game?
     overall: Number,
+    // Do you have any general comments you would like to add?
+    general: String,
 })
 
 module.exports = {

@@ -56,6 +56,7 @@ router.post('/review', async function(req, res) {
             performance: (req.body.performance) ? parseInt(req.body.performance) : 0,
             improvements: req.body.improvements,
             overall: (req.body.overall) ? parseInt(req.body.overall): 0,
+            general: req.body.general,
         })
         review.save()
     }
