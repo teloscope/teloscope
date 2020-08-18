@@ -1,8 +1,25 @@
 const mongoose = require('mongoose')
 
+const NodeState = new mongoose.Schema({
+    nodeNum: Number,
+    token: Number,
+})
+
+const GameRun = new mongoose.Schema({
+    step: Number,
+    state: [NodeState],
+})
+
+const GammaData = new mongoose.Schema({
+    user: { type: String, required: true },
+    gameNumber: Number,
+    runs: [GameRun],
+    totalTime: Number,
+})
+
 // NOTE: multi-choice questions are provided as a number from 1 - 5
 const GammaReview = new mongoose.Schema({
-    user: String,
+    user: { type: String, required: true },
     // How quickly do you think you learned how to solve the challenges?
     learningRate: Number,
     // How difficult did you find the game?
@@ -19,4 +36,7 @@ const GammaReview = new mongoose.Schema({
     general: String,
 })
 
-module.exports = mongoose.model('GammaReview', GammaReview)
+module.exports = {
+    GammaData: mongoose.model('GammaData', GammaData),
+    GammaReview: mongoose.model('GammaReview', GammaReview)
+}

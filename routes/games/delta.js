@@ -21,7 +21,7 @@ router.get('/game', function(req, res, next) {
 router.post('/game', async function(req, res, next) {
     console.log("received data:")
     console.log(req.body)
-    user = getUserID(req, res)
+    let user = getUserID(req, res)
     let data = await DeltaData.find({user: user})
     if (data !== null) {
         return res.status(200).send({"message": "Already received data from user for delta game"})
@@ -40,6 +40,7 @@ router.post('/game', async function(req, res, next) {
 })
 
 router.get('/review', function(req, res, next) {
+    _ = getUserID(req, res)
     res.render('delta/review', {game: "delta"});
 });
 
@@ -59,6 +60,7 @@ router.post('/review', async function(req, res) {
             overall: (req.body.overall) ? parseInt(req.body.overall): 0,
             general: req.body.general,
         })
+        console.log(review)
         review.save()
     }
     return res.render('assessment.pug')

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const DeltaData = new mongoose.Schema({
-    user: String,
+    user: { type: String, required: true },
     gameNumber: Number,
     playingTime: Number,
     undos: Number,
@@ -13,7 +13,7 @@ const DeltaData = new mongoose.Schema({
 
 // NOTE: multi-choice questions are provided as a number from 1 - 5
 const DeltaReview = new mongoose.Schema({
-    user: String,
+    user: { type: String, required: true },
     // How quickly do you think you learned how to solve the challenges?
     learningRate: Number,
     // How difficult did you find the game?

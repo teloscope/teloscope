@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const GammaData = require('../../models/gamma')
 const GammaReview = require('../../models/gamma')
 
 router.get('/', function(req, res, next) {
@@ -15,6 +16,25 @@ router.get('/game', function(req, res, next) {
     _ = getUserID(req, res)
     res.render('gamma/game.pug', {game: "gamma"});
 });
+
+router.post('/game', async function(req, res, next) {
+    console.log("received data:")
+    console.log(req.body)
+    let user = getUserID(req, res)
+    let data = await GammaData.find({user: user})
+    if (data !== null) {
+        return res.status(200).send({"message": "Already received data from user for gamma game"})
+    }
+    data = new GammaData({
+        user: user,
+        gameNumber: req.body.gameNumber,
+        runs: req.body.runs, 
+        totalTime: req.body.totalTime,
+    })
+    console.log(data)
+    data.save()
+    return res.status(200).send({"message": "Successfully saved user data for gamma game"})
+})
 
 router.get('/review', function(req, res, next) {
     _ = getUserID(req, res)

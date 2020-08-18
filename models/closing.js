@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const ClosingReview = new mongoose.Schema({
-    user: String,
+    user: { type: String, required: true },
     // What do you think of games as a tool for assessing someone's competency for a role. What do you think are the strengths and weaknesses?
     strengthAndWeaknesses: String,
     // What would you like to see more of generally when it comes to recruitment? What would you like to see less of?
