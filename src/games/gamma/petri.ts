@@ -1,5 +1,6 @@
-import { Group, Rectangle, Point, Size, Path, Color, Shape, PointText } from 'paper'
-import { Settings } from './settings'
+import { Group, Point, Size, Path } from 'paper'
+import { config } from './config'
+import { GameData } from './data' 
 
 
 export class PetriNet {
@@ -16,20 +17,24 @@ export class PetriNet {
     gameReset: boolean = true
     completed: boolean = false
 
-    constructor(grid: paper.Size, maxTokensCreated: number){
+    constructor(grid: paper.Size, maxTokensCreated: number, public gameData: GameData){
         this.graphic = new Group()
         this.grid = grid
         this.maxTokensCreated = maxTokensCreated 
         this.gameRunning = false
         this.gameReset = true
         this.tokensLeft = maxTokensCreated
+        // we only update the attempts field the rest is filled in by game.ts
+        this.gameData = gameData
+        
+        this.gameData.addRun()
 
-        let height = Settings.screen.height - Settings.actionBarHeight
+        let height = config.screen.height - config.actionBarHeight
 
         for (let y = 0; y < grid.height; y++) {
             for (let x = 0; x < grid.width; x++) {
                 let idx = this.toIndex(x, y)
-                this.nodes.push(new Node(new Point(((x + 1) * Settings.screen.width) / (this.grid.width + 1),((y + 1) * height) / (this.grid.height + 1)), idx))
+                this.nodes.push(new Node(new Point(((x + 1) * config.screen.width) / (this.grid.width + 1),((y + 1) * height) / (this.grid.height + 1)), idx))
                 this.graphic.addChild(this.nodes[this.nodes.length - 1].graphic)
             }
         }
@@ -65,9 +70,10 @@ export class PetriNet {
                 // console.log(this.gameReset)
                 if(this.maxTokensCreated > this.tokensCreated && node.isAddable && node.tokenCount < 5){
                     node.addTokenOnClick()
-                    this.tokensCreated ++
-                    this.totalTokens ++
-                    this.tokensLeft --
+                    this.tokensCreated++
+                    this.totalTokens++
+                    this.tokensLeft--
+                    this.gameData.addToken(node.nodeNum)
                     console.log("added token to: " + node.nodeNum)
                     console.log("tokens left: " + this.tokensLeft)
                 }
@@ -86,6 +92,12 @@ export class PetriNet {
     
     applyRules(){
         let tokenMoved: boolean = false
+        // save state to the game data
+        this.nodes.forEach(node => {
+            for (let i = 0; i < node.tokenCount; i++) {
+                this.gameData.addToken(node.nodeNum)
+            }
+        })
         // Go through the list of rules and see which requirements are met and carry out the rule if they are
         this.rules.forEach(rule => {
             console.log(rule)
@@ -121,11 +133,12 @@ export class PetriNet {
                         }
                     }
                 }
-                this.checkIfWin()
-                return true
             }
         })
         this.checkIfWin()
+        if (!this.completed) {
+            this.gameData.addRun()
+        }
         this.updateTokenNumber()
         this.gameRunning = false
         return false
@@ -157,6 +170,7 @@ export class PetriNet {
         this.nodes.forEach(node => {
             node.deleteAllTokens()
         })
+        this.gameData.addAttempt()
         this.tokensCreated = 0
         this.tokensLeft = this.maxTokensCreated
     }
@@ -188,17 +202,17 @@ export class Node {
         this.pos = pos
         this.nodeNum = nodeNum
         this.graphic = new Path.Circle(new Point(this.pos.x, this.pos.y), 30)
-        this.graphic.fillColor = Settings.color.intermediateNode       
+        this.graphic.fillColor = config.color.intermediateNode       
     }
     
     makeInput(): void {
         this.isAddable = true;
-        this.graphic.fillColor = Settings.color.inputNode
+        this.graphic.fillColor = config.color.inputNode
     }
     
     makeRequiredToWin(val: number): void {
         this.requiredToWin = val
-        this.graphic.fillColor = Settings.color.goalNode
+        this.graphic.fillColor = config.color.goalNode
     }
 
     addToken(){
@@ -206,7 +220,7 @@ export class Node {
             this.tokenCount ++
             this.getTokenPos()
             let token = new Path.Circle(new Point(this.tokenPos.x,this.tokenPos.y), 5)
-            token.fillColor = Settings.color.token
+            token.fillColor = config.color.token
             this.tokenGraphic.push(token)
             console.log(this.tokenGraphic.length)
         }
@@ -235,7 +249,7 @@ export class Node {
             this.tokenCount ++
             this.getTokenPos()
             let token = new Path.Circle(new Point(this.tokenPos.x,this.tokenPos.y), 5)
-            token.fillColor = Settings.color.token
+            token.fillColor = config.color.token
             this.tokenGraphic.push(token)
             this.tokenCount = this.tokenGraphic.length
             console.log(this.tokenGraphic.length)

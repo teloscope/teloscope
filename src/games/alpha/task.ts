@@ -1,6 +1,6 @@
-import { Entity, Controllers, Area } from 'entropi';
-import {Bodies, Body, Vector, Bounds} from "matter-js";
-import { Path, Color, Point, Size, Rectangle, Layer, PointText, Group, Project } from 'paper';
+import { Entity, Area } from 'entropi';
+import {Bodies, Vector, Bounds} from "matter-js";
+import { Path, Color, Point, Size, Rectangle, PointText, Group } from 'paper';
 import { MatterBody, MatterControllers } from './matter'
 
 
@@ -13,8 +13,10 @@ export class TaskManager {
     width: number
     height: number
     paperRef: paper.PaperScope
+    started: boolean = false
+    counter = 0;
 
-    constructor(screen: Area, public worldBounds: Bounds , paper: paper.PaperScope) {
+    constructor(screen: Area, public worldBounds: Bounds, paper: paper.PaperScope) {
         this.width = screen.width;
         this.height = screen.height;
         this.worldBounds = worldBounds
@@ -23,7 +25,9 @@ export class TaskManager {
 
     create(shape: string, amount: number, zone: string, startTime: number, duration: number, reward: number,
         punishment: number, position: Vector): Task {
+        this.counter++
         const newTask: Task = {
+            id: this.counter,
             shape,
             amount,
             zone,
@@ -34,12 +38,13 @@ export class TaskManager {
             graphic: null,
             shapes: null,
         };
+
+
         const length = this.tasks.length;
         const boxPosition = new Point(this.width - 220, length * 100 + 90)
         const rectangle = new Rectangle(boxPosition, taskBoxSize) 
         const box = new Path.Rectangle(rectangle, taskBoxFillet)
         box.fillColor = new Color("#e3e3e3")
-
     
         const amountText = new PointText({
             content: "Move " + amount.toString(), 
@@ -49,6 +54,7 @@ export class TaskManager {
 
         const shapeGraphic = new Path.RegularPolygon(new Point(boxPosition.x + 89, boxPosition.y + 24), shapeToSides(shape), 9)
         shapeGraphic.fillColor = new Color('black')
+
 
         const zoneText = new PointText({
             content: "to " + zone, 
@@ -108,21 +114,56 @@ export class TaskManager {
 
     
         newTask.graphic = taskGraphic;
-        newTask.shapes = this.createShapes(shape, shapeToSides(shape), amount, position)
+        newTask.shapes = this.createShapes(shape, shapeToSides(shape), amount, position, zone)
         this.tasks.push(newTask);
         return newTask
     }
 
     update(time: number): number {
         let score = 0;
+        console.log(time)
         this.tasks.forEach(task => {
-            if (task.graphic !== null) {
+            if (task.graphic !== null ) {
                 const starting = task.startTime - time
                 // task.graphic.startTimeText.text = "starting in: " + starting.toString()
                 if (task.startTime + task.duration === time) {
                     this.finish(task)
                     score -= task.punishment
+                } else if (task.startTime === time) {
+                    task.shapes.forEach(shape => {
+                        let b = shape.body as MatterBody
+                        b.body.collisionFilter.group = 0
+                        let s = shape.sprite as paper.Path
+                        s.fillColor = new Color('black')
+                        if (task.zone == 'A'){
+                            s.strokeColor = new Color('#ff0000')
+                        }
+                        else if (task.zone == 'B'){
+                            s.strokeColor = new Color('#ffee00')
+                        }
+                        else if (task.zone == 'C'){
+                            s.strokeColor = new Color('#0015ff')
+                        }
+                        else{
+                            s.strokeColor = new Color('#1eff00')
+                        }
+                    })
+                    if (task.zone == 'A'){
+                        task.graphic.graphic.children[0].fillColor = new Color('#ff0000')
+                    }
+                    else if (task.zone == 'B'){
+                        task.graphic.graphic.children[0].fillColor = new Color('#ffee00')
+                    }
+                    else if (task.zone == 'C'){
+                        task.graphic.graphic.children[0].fillColor = new Color('#0015ff')
+                    }
+                    else { 
+                        task.graphic.graphic.children[0].fillColor = new Color('#1eff00')
+                    }
+                    
+                    
                 } else if (task.startTime <= time) {
+
                     const timeLeft = task.duration - (time - task.startTime);
                     // task.graphic.startTimeText.text = ""
                     task.graphic.timeText.content = timeLeft.toString();
@@ -150,19 +191,25 @@ export class TaskManager {
         this.tasks.splice(deleteIdx, 1)
     }
 
-    createShapes(name: string, sides: number, amount: number, position: Vector): Entity[] {
+    createShapes(name: string, sides: number, amount: number, position: Vector, zone: string): Entity[] {
         const entities: Entity[] = [];
         const sqrt = Math.ceil(Math.sqrt(amount))
         for (let i = 0; i < sqrt; i++) {
             for (let j = 0; j < sqrt; j++) {
                 const id = i * sqrt + j
                 if (id < amount) {
-                    const body = Bodies.polygon(position.x + (i * 30), position.y - (j * 30), sides, 20, 
+                    const body = Bodies.polygon(position.x + (i * 40), position.y - (j * 40), sides, 20, 
                         {frictionAir: 0.2, density: 10, label: name + id.toString() , id: idCounter})
+                    body.collisionFilter.group = -2
+                    body.collisionFilter.mask =  0
+                    body.collisionFilter.category = 0
                     idCounter++; 
                     const entityName = name + id.toString()
-                    const shapeSprite: paper.Path = new Path.RegularPolygon(new Point(position.x + (i * 30), -position.y - (j * 30)), sides, 20)
-                    shapeSprite.fillColor = new Color('black')
+                    const shapeSprite: paper.Path = new Path.RegularPolygon(new Point(position.x + (i * 40), -position.y - (j * 40)), sides, 20)
+                    shapeSprite.fillColor = new Color(0.9,0.9,0.9)
+                    shapeSprite.strokeWidth = 3
+//                    shapeSprite.strokeColor = new Color(0.5,0.5,0.5)
+
                     entities.push(new Entity({
                         name: entityName,
                         usingBody: new MatterBody(body),
@@ -171,17 +218,21 @@ export class TaskManager {
                             MatterControllers.boundary(this.worldBounds)
                         ]
                     }))
+
+
                 }
             }
         }
         return entities
     }
 
+
 }
 
 type Task = {
-    shape: string;
-    amount: number
+    id: number,
+    shape: string,
+    amount: number,
     zone: string,
     startTime: number,
     duration: number,

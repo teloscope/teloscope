@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 
 const DeltaData = new mongoose.Schema({
     user: String,
+    gameNumber: Number,
     playingTime: Number,
     undos: Number,
     restarts: Number,

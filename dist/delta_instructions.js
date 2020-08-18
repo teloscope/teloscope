@@ -260,7 +260,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"NewData\", function() { return NewData; });\n// This file outlines the data captured per game in delta\nfunction NewData() {\n    return {\n        playingTime: 0,\n        moves: 0,\n        undos: 0,\n        restarts: 0,\n        idleTime: 0,\n        sentenceFormedTime: [],\n    };\n}\n\n\n//# sourceURL=webpack:///./src/games/delta/data.ts?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"NewData\", function() { return NewData; });\n// This file outlines the data captured per game in delta\nfunction NewData() {\n    return {\n        gameNumber: 0,\n        playingTime: 0,\n        moves: 0,\n        undos: 0,\n        restarts: 0,\n        idleTime: 0,\n        sentenceFormedTime: [],\n    };\n}\n\n\n//# sourceURL=webpack:///./src/games/delta/data.ts?");
 
 /***/ }),
 

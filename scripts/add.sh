@@ -35,9 +35,19 @@ mv views/$game/review_template.pug views/$game/review.pug
 
 mv game/router.js routes/games/$game.js
 
-# gsed -i'' -E "s|res.render('|&"$game"/|" routes/games/$game.js
+# We perform a series of find and replace to make sure that the game is correctly wired to the rest of the platform
 
 find views/$game -type f -name "*.pug" -exec perl -i -pe's/extends header/extends ..\/header/g' {} \;
+
+find views/$game -type f -name "*.pug" -exec perl -i -pe's|"/game"|"/dev/'$game'/game"|g' {} \;
+
+find views/$game -type f -name "*.pug" -exec perl -i -pe's|"instructions.js"|"/'$game'_instructions.js"|g' {} \;
+
+find views/$game -type f -name "*.pug" -exec perl -i -pe's|"game.js"|"/'$game'.js"|g' {} \;
+
+find src/games/$game -type f -name "*.ts" -exec perl -i -pe's|"/end"|"/dev/'$game'/review"|g' {} \;
+
+find src/games/$game -type f -name "*.ts" -exec perl -i -pe's|"/game"|"/dev/'$game'/game"|g' {} \;
 
 rm -rf game
 

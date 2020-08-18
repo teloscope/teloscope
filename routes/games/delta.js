@@ -28,6 +28,7 @@ router.post('/game', async function(req, res, next) {
     }
     data = new DeltaData({
         user: user,
+        gameNumber: req.body.gameNumber,
         playingTime: req.body.playingTime,
         undos: req.body.undos,
         restarts: req.body.restarts,

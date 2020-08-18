@@ -101,7 +101,8 @@ function create(game: Game) {
         if (followController.target.x !== -1 && followController.target.y !== -1) {
             instructionsText.content = "Run into objects to pick them up.";
             instructionsText.position.x += 60;
-            const newTask = tm.create("square", 1, "A", 0, 10, 0, 0, matter.Vector.create(center.x + 200, center.y));
+            let timeNow = game.time.seconds()
+            const newTask = tm.create("square", 1, "A", timeNow + 4, 200, 1, 1, matter.Vector.create(center.x + 200, center.y));
             game.add.entities(newTask.shapes);
             clearInterval(firstTimer);
         }
@@ -141,11 +142,6 @@ function create(game: Game) {
                 if (tm.tasks.length === 0) {
                     instructionsText.content = "Congratulations, you're set to go. Here's a few extra tips before you begin.";
                     instructionsText.position.x -= 60
-                    const instructionsText3 = new PointText({
-                        content: "You have " + toTimeString(globalTimeLeft) + " minutes to get the highest score you can",
-                        point: [screen.width / 2 - 300, 230],
-                        fontSize: 16,
-                    });
                     const instructionsText4 = new PointText({
                         content: "The tasks are simple and you can do them in any order",
                         point: [screen.width / 2 - 300, 260],
@@ -156,23 +152,6 @@ function create(game: Game) {
                         point: [screen.width / 2 - 240, 290],
                         fontSize: 16,
                     });
-                    const startText = new PointText({
-                        content: "Start",
-                        point: [screen.width / 2 - 125, 360],
-                        fontSize: 24,
-                    });
-                    startText.onClick = () => {
-                        instructionsText.remove();
-                        instructionsText2.remove();
-                        instructionsText3.remove();
-                        instructionsText4.remove();
-                        instructionsText5.remove();
-                        // setEvents(game);
-                        // startTimer = true;
-                        startText.remove();
-                        window.location.href = '/dev/alpha/game';
-                        // path.remove()
-                    };
                     clearInterval(thirdTimer);
                 }
             }, 30);
@@ -191,15 +170,8 @@ function create(game: Game) {
         fontSize: 16,
     });
 
-    const timerText = new PointText({
-        content: toTimeString(globalTimeLeft),
-        point: [screen.width - 120, 20],
-        fontSize: 16,
-    });
-
     gameMenu = {
         scoreText,
-        timerText,
     };
 }
 
@@ -265,29 +237,18 @@ function update(game: Game) {
         }
     }
 
-    // update task status
-    if (startTimer) {
-        if (game.time.tick % 1000) {
-            const seconds = game.time.seconds();
-            const scoreChange = tm.update(seconds);
-            if (scoreChange < 0 && carry !== null) {
-                matter.Body.setDensity(carry.bodyB, 10);
-                let physics = game.physics as MatterPhysics
-                matter.Composite.remove(physics.engine.world, carry);
-                carry = null;
-            }
-            score += scoreChange;
-            gameMenu.scoreText.content = "Score: " + score.toString();
-            gameMenu.timerText.content = "Time: " + toTimeString(globalTimeLeft - seconds);
+    if (game.time.tick % 1000) {
+        const seconds = game.time.seconds();
+        const scoreChange = tm.update(seconds);
+        if (scoreChange < 0 && carry !== null) {
+            matter.Body.setDensity(carry.bodyB, 10);
+            let physics = game.physics as MatterPhysics
+            matter.Composite.remove(physics.engine.world, carry);
+            carry = null;
         }
-
-        if (globalTimeLeft - game.time.seconds() < 0) {
-            game.stop();
-            setTimeout(() => {
-                window.location.href = '/end';
-            }, 300)
-        }
-    } else {
-        game.time.tick--;
+        score += scoreChange;
+        gameMenu.scoreText.content = "Score: " + score.toString();
+//            gameMenu.timerText.content = "Time: " + toTimeString(globalTimeLeft - seconds);
     }
+
 }

@@ -1,6 +1,7 @@
 // This file outlines the data captured per game in delta
 
 export type GameData = {
+    gameNumber: number,
     playingTime: number,
     moves: number,
     undos: number,
@@ -13,6 +14,7 @@ export type GameData = {
 
 export function NewData(): GameData {
     return {
+        gameNumber: 0,
         playingTime: 0,
         moves: 0,
         undos: 0,

@@ -4,10 +4,12 @@ import * as matter from "matter-js";
 import { PaperScope, Path, Color, Point, Size, Rectangle, Layer, PointText, Group } from "paper";
 import { PaperRenderer } from "./renderer";
 import { MatterPhysics, MatterBody, MatterControllers } from "./matter"
+import { config } from "./config";
+import { GameData, NewData } from "./data"
+import axios from 'axios'
 
 // Variables
 const paper = new PaperScope();
-const screen = new Size(800, 600);
 let player: Entity;
 const lastClicked: Matter.Vector = matter.Vector.create(-1, -1);
 let followController: FollowController;
@@ -16,9 +18,9 @@ let tm: TaskManager;
 let worldBounds: Matter.Bounds;
 const zones: Zone[] = [];
 let score = 0;
-let globalTimeLeft: number;
 let gameMenu: Menu;
-let startTimer = false;
+let gameData: GameData = NewData();
+
 
 window.onload = () => {
 
@@ -41,7 +43,7 @@ window.onload = () => {
         create,
         update,
         physics: new MatterPhysics(),
-        renderer: new PaperRenderer(screen),
+        renderer: new PaperRenderer(config.screen),
         options: [Game.withFrameRate(30), Game.withBackGroundColor(0xffffff)],
     });
 };
@@ -63,8 +65,6 @@ function create(game: Game) {
     ]);
 
     tm = new TaskManager(game.screen, worldBounds, paper);
-
-    globalTimeLeft = 120; // seconds
 
     const center = matter.Vector.div(matter.Vector.add(worldBounds.min, worldBounds.max), 2);
 
@@ -95,30 +95,23 @@ function create(game: Game) {
     zones.forEach((zone) => {
         zone.show();
     });
+
     setEvents(game);
-    startTimer = true;
 
     new PointText({
         content: "Tasks:",
-        point: [screen.width - 220, 60],
+        point: [config.screen.width - 220, 60],
         fontSize: 24,
     });
 
     const scoreText = new PointText({
         content: "Score: " + score.toString(),
-        point: [screen.width - 220, 20],
-        fontSize: 16,
-    });
-
-    const timerText = new PointText({
-        content: toTimeString(globalTimeLeft),
-        point: [screen.width - 120, 20],
+        point: [config.screen.width - 220, 20],
         fontSize: 16,
     });
 
     gameMenu = {
         scoreText,
-        timerText,
     };
 }
 
@@ -132,76 +125,88 @@ function setEvents(game: Game) {
 
     game.add.event(
         Events.Timed.at(10000, () => {
-            const newTask = tm.create("square", 4, "C", 10, 60, 10, 1, matter.Vector.create(120, -200));
-            game.add.entities(newTask.shapes);
+            const newTask = tm.create("square", 4, "C", 15, 60, 10, 1, matter.Vector.create(120, -200));
+            game.add.entities(newTask.shapes); 
         })
     );
 
     game.add.event(
         Events.Timed.at(15000, () => {
-            const newTask = tm.create("pentagon", 2, "C", 17, 20, 10, 1, matter.Vector.create(160, -400));
+            const newTask = tm.create("pentagon", 2, "C", 20, 20, 10, 1, matter.Vector.create(160, -400));
             game.add.entities(newTask.shapes);
         })
     );
 
     game.add.event(
         Events.Timed.at(40000, () => {
-            const newTask = tm.create("square", 2, "A", 37, 20, 5, 1, matter.Vector.create(0, 0));
+            const newTask = tm.create("square", 2, "A", 45, 20, 5, 1, matter.Vector.create(360, -30));
             game.add.entities(newTask.shapes);
         })
     );
 
     game.add.event(
         Events.Timed.at(40000, () => {
-            const newTask = tm.create("triangle", 6, "B", 37, 40, 30, 1, matter.Vector.create(160, -100));
+            const newTask = tm.create("triangle", 5, "B", 45, 40, 30, 1, matter.Vector.create(280, -300));
             game.add.entities(newTask.shapes);
         })
     );
 
     game.add.event(
         Events.Timed.at(70000, () => {
-            const newTask = tm.create("pentagon", 3, "D", 67, 30, 10, 1, matter.Vector.create(0, 0));
+            const newTask = tm.create("pentagon", 3, "D", 75, 30, 10, 1, matter.Vector.create(310, -120));
             game.add.entities(newTask.shapes);
         })
     );
 
     game.add.event(
         Events.Timed.at(83000, () => {
-            const newTask = tm.create("triangle", 1, "A", 83, 15, 50, 1, matter.Vector.create(120, -200));
+            const newTask = tm.create("triangle", 1, "A", 88, 15, 50, 1, matter.Vector.create(120, -200));
             game.add.entities(newTask.shapes);
         })
     );
 
     game.add.event(
         Events.Timed.at(90000, () => {
-            const newTask = tm.create("square", 3, "C", 90, 30, 10, 1, matter.Vector.create(200, -300));
+            const newTask = tm.create("square", 3, "C", 95, 30, 10, 1, matter.Vector.create(50, -300));
             game.add.entities(newTask.shapes);
         })
     );
 
     game.add.event(
         Events.Timed.at(100000, () => {
-            const newTask = tm.create("hexagon", 3, "C", 100, 20, 5, 15, matter.Vector.create(150, -50));
+            const newTask = tm.create("hexagon", 3, "C", 105, 20, 5, 15, matter.Vector.create(190, -50));
             game.add.entities(newTask.shapes);
         })
     );
 
     game.add.event(
         Events.Timed.at(110000, () => {
-            const newTask = tm.create("pentagon", 6, "D", 110, 10, 50, 1, matter.Vector.create(50, -400));
+            const newTask = tm.create("pentagon", 4, "D", 115, 27, 50, 1, matter.Vector.create(150, -400));
             game.add.entities(newTask.shapes);
+        })
+    );
+    
+    game.add.event(
+        Events.Timed.at(143000, () => {
+            game.stop()
+            gameData.finalScore = score;
+            console.log(score)
+            axios.post(config.dataURL, gameData)
+            setTimeout(() => {
+                window.location.href = config.endURL;
+            }, 300)
         })
     );
 }
 
 function update(game: Game) {
 
-    if (carry === null && matter.Vector.magnitude(matter.Vector.sub(followController.target, player.body.pos())) < 60) {
+    if (carry === null && matter.Vector.magnitude(matter.Vector.sub(followController.target, player.body.pos())) < 60)  {
         const b = player.body as MatterBody
         let physics = game.physics as MatterPhysics
         // @ts-ignore - function is there in Matter library but not yet exported to typescript
         const collision = matter.Query.collides(b.interactionBody, matter.Composite.allBodies(physics.engine.world));
-        if (collision.length > 1) {
+        if (collision.length > 1 &&  collision[1].bodyB.collisionFilter.group == 0) {
             console.log("attaching");
             matter.Body.setDensity(collision[1].bodyB, 0.01);
             carry = matter.Constraint.create({ bodyA: b.body, bodyB: collision[1].bodyB, stiffness: 1, length: 35 });
@@ -234,12 +239,12 @@ function update(game: Game) {
                                     console.log(task.amount);
                                     if (task.amount == 0) {
                                         console.log("finished task");
+                                        gameData.tasksCompleted.push(task.id)
                                         tm.finish(task);
                                         score += task.reward;
                                         gameMenu.scoreText.content = "Score: " + score.toString();
                                     } else {
                                         task.graphic.amountText.content = "Move " + task.amount.toString();
-                                        console.log("Hello World")
                                         shape.destroy();
                                     }
                                     shapeIdx = task.shapes.length;
@@ -257,35 +262,22 @@ function update(game: Game) {
     }
 
     // update task status
-    if (startTimer) {
-        if (game.time.tick % 1000) {
-            const seconds = game.time.seconds();
-            const scoreChange = tm.update(seconds);
-            if (scoreChange < 0 && carry !== null) {
-                matter.Body.setDensity(carry.bodyB, 10);
-                let physics = game.physics as MatterPhysics
-                matter.Composite.remove(physics.engine.world, carry);
-                carry = null;
-            }
-            score += scoreChange;
-            gameMenu.scoreText.content = "Score: " + score.toString();
-            gameMenu.timerText.content = "Time: " + toTimeString(globalTimeLeft - seconds);
+    if (game.time.tick % 1000) {
+        const seconds = game.time.seconds();
+        const scoreChange = tm.update(seconds);
+        if (scoreChange < 0 && carry !== null) {
+            matter.Body.setDensity(carry.bodyB, 10);
+            let physics = game.physics as MatterPhysics
+            matter.Composite.remove(physics.engine.world, carry);
+            carry = null;
         }
-
-        if (globalTimeLeft - game.time.seconds() < 0) {
-            game.stop();
-            setTimeout(() => {
-                window.location.href = '/dev/alpha/end';
-            }, 300)
-        }
-    } else {
-        game.time.tick--;
+        score += scoreChange;
+        gameMenu.scoreText.content = "Score: " + score.toString();
     }
 }
 
 export type Menu = {
     scoreText: paper.PointText;
-    timerText: paper.PointText;
 };
 
 export function toTimeString(time: number): string {
@@ -347,7 +339,20 @@ export class Zone {
         this.name = name;
         const rectangle = new Rectangle(new Point(pos.x, pos.y), zoneSize);
         this.rectangle = new Path.Rectangle(rectangle, zoneFillet);
-        this.rectangle.fillColor = new Color("#cfcfcf");
+//        this.rectangle.fillColor = new Color("#cfcfcf");
+        if (name == 'A'){
+            this.rectangle.fillColor = new Color('#ff0000')
+        }
+        else if (name == 'B'){
+            this.rectangle.fillColor = new Color('#ffee00')
+        }
+        else if (name == 'C'){
+            this.rectangle.fillColor = new Color('#0015ff')
+        }
+        else{
+            this.rectangle.fillColor = new Color('#1eff00')
+        }
+
         this.rectangle.visible = false;
         this.text = new PointText({
             point: [pos.x + zoneSize.width / 2 - 10, pos.y + zoneSize.height / 2 + 10],

@@ -1,5 +1,11 @@
 const mongoose = require('mongoose')
 
+const AlphaData = new mongoose.Schema({
+    user: String,
+    finalScore: Number,
+    tasksCompleted: [Number], 
+})
+
 // NOTE: multi-choice questions are provided as a number from 1 - 5
 const AlphaReview = new mongoose.Schema({
     user: String,
@@ -19,4 +25,7 @@ const AlphaReview = new mongoose.Schema({
     general: String,
 })
 
-module.exports = mongoose.model('AlphaReview', AlphaReview)
+module.exports = {
+    AlphaData: mongoose.model('AlphaData', AlphaData),
+    AlphaReview: mongoose.model('AlphaReview', AlphaReview)
+}

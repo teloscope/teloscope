@@ -51,6 +51,7 @@ function update(game: Game) {
     engine.input(game.input)
     if (engine.completed) {
         engine.completed = false; 
+        engine.gameData.gameNumber = currentGame
         // send game data to the server
         axios.post(config.server, engine.gameData)
         currentGame++;
