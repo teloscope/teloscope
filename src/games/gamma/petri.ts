@@ -73,7 +73,6 @@ export class PetriNet {
                     this.tokensCreated++
                     this.totalTokens++
                     this.tokensLeft--
-                    this.gameData.addToken(node.nodeNum)
                     console.log("added token to: " + node.nodeNum)
                     console.log("tokens left: " + this.tokensLeft)
                 }

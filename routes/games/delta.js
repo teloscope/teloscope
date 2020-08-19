@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 // const getUserID = require('../utils')
-const DeltaData = require('../../models/delta')
-const DeltaReview = require('../../models/delta')
+const { DeltaData } = require('../../models/delta')
+const { DeltaReview } = require('../../models/delta')
 
 router.get('/', function(req, res, next) {
     res.redirect('/dev/delta/instructions')

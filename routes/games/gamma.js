@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const GammaData = require('../../models/gamma')
-const GammaReview = require('../../models/gamma')
+const { GammaData } = require('../../models/gamma')
+const { GammaReview } = require('../../models/gamma')
 
 router.get('/', function(req, res, next) {
     res.redirect('/dev/gamma/instructions')

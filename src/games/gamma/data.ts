@@ -28,18 +28,22 @@ export class GameData {
         for (let idx = 0; idx < states.length; idx++) {
             let nodeState = states[idx];
             if (nodeState.nodeNum === nodeNum) {
+                console.log("A")
                 nodeState.token++
                 break
             }
             if (idx === states.length - 1) {
+                console.log("B")
                 states.push({
                     nodeNum: nodeNum,
                     token: 1, 
                 })
+                break;
             }
         }
         
         if (states.length === 0) {
+            console.log("C")
             states.push({
                 nodeNum: nodeNum,
                 token: 1, 

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const AlphaData = require('../../models/alpha')
-const AlphaReview = require('../../models/alpha')
+const { AlphaData } = require('../../models/alpha')
+const { AlphaReview } = require('../../models/alpha')
 
 router.get('/', async function(req, res, next) {
     _ = getUserID(req, res)
