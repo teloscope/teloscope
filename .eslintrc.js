@@ -24,22 +24,22 @@ module.exports = {
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
-        "project": "tsconfig.json",
+        "project": "./tsconfig.json",
         "sourceType": "module"
     },
     "plugins": [
         "@typescript-eslint"
     ],
     "rules": {
-        "@typescript-eslint/adjacent-overload-signatures": "warning",
+        "@typescript-eslint/adjacent-overload-signatures": "warn",
         "@typescript-eslint/array-type": [
-            "warning",
+            "warn",
             {
                 "default": "array"
             }
         ],
         "@typescript-eslint/ban-types": [
-            "warning",
+            "warn",
             {
                 "types": {
                     "Object": {
@@ -63,9 +63,9 @@ module.exports = {
                 }
             }
         ],
-        // "@typescript-eslint/class-name-casing": "warning",
-        "@typescript-eslint/consistent-type-assertions": "warning",
-        "@typescript-eslint/dot-notation": "warning",
+        // "@typescript-eslint/class-name-casing": "warn",
+        "@typescript-eslint/consistent-type-assertions": "warn",
+        "@typescript-eslint/dot-notation": "warn",
         "@typescript-eslint/indent": "off",
         "@typescript-eslint/member-delimiter-style": [
             "off",
@@ -80,25 +80,25 @@ module.exports = {
                 }
             }
         ],
-        "@typescript-eslint/no-empty-function": "warning",
-        "@typescript-eslint/no-empty-interface": "warning",
+        "@typescript-eslint/no-empty-function": "warn",
+        "@typescript-eslint/no-empty-interface": "warn",
         "@typescript-eslint/no-explicit-any": "off",
-        "@typescript-eslint/no-misused-new": "warning",
-        "@typescript-eslint/no-namespace": "warning",
+        "@typescript-eslint/no-misused-new": "warn",
+        "@typescript-eslint/no-namespace": "warn",
         "@typescript-eslint/no-parameter-properties": "off",
-        "@typescript-eslint/no-unused-expressions": "warning",
+        "@typescript-eslint/no-unused-expressions": "warn",
         "@typescript-eslint/no-use-before-define": "off",
-        "@typescript-eslint/no-var-requires": "warning",
-        "@typescript-eslint/prefer-for-of": "warning",
-        "@typescript-eslint/prefer-function-type": "warning",
-        "@typescript-eslint/prefer-namespace-keyword": "warning",
+        "@typescript-eslint/no-var-requires": "warn",
+        "@typescript-eslint/prefer-for-of": "warn",
+        "@typescript-eslint/prefer-function-type": "warn",
+        "@typescript-eslint/prefer-namespace-keyword": "warn",
         "@typescript-eslint/quotes": "off",
         "@typescript-eslint/semi": [
             "off",
             null
         ],
         "@typescript-eslint/triple-slash-reference": [
-            "warning",
+            "warn",
             {
                 "path": "always",
                 "types": "prefer-import",
@@ -106,7 +106,7 @@ module.exports = {
             }
         ],
         "@typescript-eslint/type-annotation-spacing": "off",
-        "@typescript-eslint/unified-signatures": "warning",
+        "@typescript-eslint/unified-signatures": "warn",
         "arrow-parens": [
             "off",
             "always"
@@ -115,18 +115,18 @@ module.exports = {
             "off",
             "off"
         ],
-        "camelcase": "warning",
+        "camelcase": "warn",
         "comma-dangle": "off",
         "complexity": "off",
-        "constructor-super": "warning",
+        "constructor-super": "warn",
         "eol-last": "off",
         "eqeqeq": [
-            "warning",
+            "warn",
             "smart"
         ],
-        "guard-for-in": "warning",
+        "guard-for-in": "warn",
         "id-blacklist": [
-            "warning",
+            "warn",
             "any",
             "Number",
             "number",
@@ -137,60 +137,60 @@ module.exports = {
             "Undefined",
             "undefined"
         ],
-        "id-match": "warning",
-        // "jsdoc/check-alignment": "warning",
-        // "jsdoc/check-indentation": "warning",
-        // "jsdoc/newline-after-description": "warning",
+        "id-match": "warn",
+        // "jsdoc/check-alignment": "warn",
+        // "jsdoc/check-indentation": "warn",
+        // "jsdoc/newline-after-description": "warn",
         "linebreak-style": "off",
         "max-classes-per-file": [
-            "warning",
+            "warn",
             1
         ],
         "max-len": "off",
         "new-parens": "off",
         "newline-per-chained-call": "off",
-        "no-bitwise": "warning",
-        "no-caller": "warning",
-        "no-cond-assign": "warning",
-        "no-console": "warning",
-        "no-debugger": "warning",
-        "no-empty": "warning",
-        "no-eval": "warning",
+        "no-bitwise": "warn",
+        "no-caller": "warn",
+        "no-cond-assign": "warn",
+        "no-console": "warn",
+        "no-debugger": "warn",
+        "no-empty": "warn",
+        "no-eval": "warn",
         "no-extra-semi": "off",
         "no-fallthrough": "off",
         "no-invalid-this": "off",
         "no-irregular-whitespace": "off",
         "no-multiple-empty-lines": "off",
-        "no-new-wrappers": "warning",
+        "no-new-wrappers": "warn",
         "no-shadow": [
-            "warning",
+            "warn",
             {
                 "hoist": "all"
             }
         ],
-        "no-throw-literal": "warning",
+        "no-throw-literal": "warn",
         "no-trailing-spaces": "off",
-        "no-undef-init": "warning",
-        "no-underscore-dangle": "warning",
-        "no-unsafe-finally": "warning",
-        "no-unused-labels": "warning",
-        "no-var": "warning",
-        "object-shorthand": "warning",
+        "no-undef-init": "warn",
+        "no-underscore-dangle": "warn",
+        "no-unsafe-finally": "warn",
+        "no-unused-labels": "warn",
+        "no-var": "warn",
+        "object-shorthand": "warn",
         "one-var": [
-            "warning",
+            "warn",
             "never"
         ],
-        // "prefer-arrow/prefer-arrow-functions": "warning",
-        "prefer-const": "warning",
+        // "prefer-arrow/prefer-arrow-functions": "warn",
+        "prefer-const": "warn",
         "quote-props": "off",
-        "radix": "warning",
+        "radix": "warn",
         "space-before-function-paren": "off",
         "space-in-parens": [
             "off",
             "never"
         ],
         "spaced-comment": [
-            "warning",
+            "warn",
             "always",
             {
                 "markers": [
@@ -198,7 +198,7 @@ module.exports = {
                 ]
             }
         ],
-        "use-isnan": "warning",
+        "use-isnan": "warn",
         "valid-typeof": "off"
     }
 };

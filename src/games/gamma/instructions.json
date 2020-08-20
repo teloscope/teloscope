@@ -1,0 +1,58 @@
+{
+    "tokens": 1,
+    "grid": {
+        "width": 2,
+        "height": 2
+    },
+    "inputNodes": [1],
+    "rules": [
+        {
+            "input": [
+                {
+                    "nodeNum": 3,
+                    "token": 1
+                }
+            ],
+            "output": [
+                {
+                    "nodeNum": 2,
+                    "token": 1
+                }
+            ]
+        },
+        {
+            "input": [
+                {
+                    "nodeNum": 0,
+                    "token": 1
+                }
+            ],
+            "output": [
+                {
+                    "nodeNum": 3,
+                    "token": 1
+                }
+            ]
+        },
+        {
+            "input": [
+                {
+                    "nodeNum": 1,
+                    "token": 1
+                }
+            ],
+            "output": [
+                {
+                    "nodeNum": 0,
+                    "token": 1
+                }
+            ]
+        }
+    ],
+    "objective": [
+        {
+            "nodeNum": 2,
+            "token": 2
+        }
+    ]
+}

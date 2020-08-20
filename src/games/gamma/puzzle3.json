@@ -1,0 +1,109 @@
+{
+    "tokens": 4,
+    "grid": {
+        "width": 3,
+        "height": 3
+    },
+    "inputNodes": [0, 2, 6, 8],
+    "rules": [
+        {
+            "input": [
+                {
+                    "nodeNum": 3,
+                    "token": 1
+                },
+                {
+                    "nodeNum": 7,
+                    "token": 1
+                }
+            ],
+            "output": [
+                {
+                    "nodeNum": 7,
+                    "token": 1
+                },
+                {
+                    "nodeNum": 4,
+                    "token": 1
+                }
+            ]
+        },
+        {
+            "input": [
+                {
+                    "nodeNum": 1,
+                    "token": 1
+                }
+                
+            ],
+            "output": [
+                {
+                    "nodeNum": 1,
+                    "token": 1
+                },
+                {
+                    "nodeNum": 0,
+                    "token": 1
+                }
+            ]
+        },
+        {
+            "input": [
+                {
+                    "nodeNum": 0,
+                    "token": 3
+                },
+                {
+                    "nodeNum": 6,
+                    "token": 1
+                }
+            ],
+            "output": [
+                {
+                    "nodeNum": 6,
+                    "token": 1
+                },
+                {
+                    "nodeNum": 3,
+                    "token": 1
+                }
+            ]
+        },
+        {
+            "input": [
+                {
+                    "nodeNum": 8,
+                    "token": 2
+                }
+                
+            ],
+            "output": [
+                {
+                    "nodeNum": 1,
+                    "token": 2
+                }
+            ]
+        },
+        {
+            "input": [
+                {
+                    "nodeNum": 2,
+                    "token": 1
+                }
+                
+            ],
+            "output": [
+                {
+                    "nodeNum": 7,
+                    "token": 1
+                }
+            ]
+        }
+    ],
+    "objective": [
+        {
+            "nodeNum": 4,
+            "token": 2
+        }
+    ]
+}

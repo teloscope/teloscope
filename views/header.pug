@@ -1,0 +1,80 @@
+doctype html
+html
+  head
+    title= Teloscope
+    link(rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans")
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    script.
+      pageState="#{pageState}"
+    script(src="/javascript/nav.js")
+    block header
+  body
+    .nav
+      img(src="/images/teloscopeIcon.png", alt="")
+      h1 Teloscope
+      a(href='/dev/intro')
+        .topic Introduction
+            
+      //- a(href='/dev/views')
+      //-   .topic Your Views
+
+      a(href='/dev/alpha')
+        .topic Alpha
+
+      if game == "alpha"
+        a(href='/dev/alpha/instructions')
+          .subtopic Instructions
+
+        a(href='/dev/alpha/game')
+          .subtopic Game
+
+        a(href='/dev/alpha/review')
+          .subtopic Review
+            
+      a(href='/dev/beta')
+        .topic Beta
+      
+      if game == "beta"
+        a(href='/dev/beta/instructions')
+          .subtopic Instructions
+
+        a(href='/dev/beta/game')
+          .subtopic Game
+
+        a(href='/dev/beta/review')
+          .subtopic Review
+
+      a(href='/dev/gamma')
+        .topic Gamma
+
+      if game == "gamma"
+        a(href='/dev/gamma/instructions')
+          .subtopic Instructions
+
+        a(href='/dev/gamma/game')
+          .subtopic Game
+
+        a(href='/dev/gamma/review')
+          .subtopic Review
+      
+      a(href='/dev/delta')
+        .topic Delta
+
+      if game == "delta"
+        a(href='/dev/delta/instructions')
+          .subtopic Instructions
+
+        a(href='/dev/delta/game')
+          .subtopic Game
+
+        a(href='/dev/delta/review')
+          .subtopic Review
+        
+      //- a(href='/dev/assessment')
+      //-   .topic Self Assessment
+        
+      a(href='/dev/closing')
+        .topic Closing
+    .main
+      .panel
+        block body

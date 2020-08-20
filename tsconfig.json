@@ -7,13 +7,13 @@
     "jsx": "react",
     "allowJs": true,
     "moduleResolution": "node",
+    "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
-    "types": [
-      "node"
-    ]
+    // "types": [
+    //   "node"
+    // ]
   },
   "include": [
-    "entropy/src/*",
-    "game"
+    "src",
   ]
 }

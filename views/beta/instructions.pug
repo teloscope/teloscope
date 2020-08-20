@@ -1,0 +1,24 @@
+extends ../header.pug
+
+block header
+  script(src="/beta_instructions.js")
+
+block body
+  h3 Instructions
+  p 
+    | This game is divided into multiple puzzles. You are given 5 minutes to get as many points as possible by
+    | completing as many of the puzzles. Each puzzle has blocks that are blue and can only move in a vertical
+    | direction and blocks that are green and can only move in a horizontal direction. The goal of each puzzle is
+    | to maneuver the blocks such that the black block moves from the left side to the right. Whilst moving the
+    | blocks you must keep the entire puzzle in balance - that is to say that no side must be overloaded with 
+    | blocks. Below is a practice puzzle to help you become familiar with the game.
+    
+  canvas(id="instructionsCanvas")
+  p
+    | There are six puzzles of varying difficulty for you to choose from. Before starting each puzzle you must 
+    | estimate the time you need to finish the puzzle. If you complete the puzzle in this allotted time you will 
+    | receive points if not then you will receive none. When allotting yourself time the more time you give yourself
+    | the less amount of points you will receive for completing it. When you feel you are ready to begin, press start.
+    
+  br
+  a(href="/dev/beta/game" class="button") Start
