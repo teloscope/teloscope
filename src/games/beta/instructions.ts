@@ -4,16 +4,15 @@ import { Puzzle, Block, Direction } from './puzzle';
 import Clock from './assets/time.svg';
 import Scale from './assets/scale.svg';
 import Star from './assets/star.svg';
-import { Settings } from './settings'
+import { config } from './config'
 
 // Variables
 let paper = new PaperScope()
 let exampleTime: number = 0;
 let examplePuzzle: Puzzle = null;
 let gameRunning: boolean = true;
-const panelSize = new Size(500, 500)
-const panelPos = new Point((Settings.screen.width - panelSize.width)/2, 80)
-const averageTimePerPuzzle = Settings.completionTime / 6;
+const panelPos = new Point((config.screen.width - config.panel.width)/2, 80)
+const averageTimePerPuzzle = config.completionTime / 6;
 let puzzleLayer: any;
 
 
@@ -21,8 +20,8 @@ window.onload = () => {
 
     paper.install(window)
     let paperCanvas = <HTMLCanvasElement> document.getElementById('instructionsCanvas')
-    paperCanvas.width = Settings.screen.width;
-    paperCanvas.height = Settings.screen.height;
+    paperCanvas.width = config.screen.width;
+    paperCanvas.height = config.screen.height;
     paper.setup(paperCanvas)
 
     puzzleLayer = new Layer({
@@ -43,7 +42,8 @@ window.onload = () => {
 
 function designPuzzles() {
     examplePuzzle = new Puzzle({
-        position: new Point((Settings.screen.width - (7*70) + 10)/2, panelPos.y + 10 ),
+        gameNumber: 0,
+        position: new Point((config.screen.width - (7*70) + 10)/2, panelPos.y + 10 ),
         maxUnbalance: 5,
         scoreSlope: -3,
         baseTime: averageTimePerPuzzle,
@@ -65,52 +65,52 @@ function designPuzzles() {
 function buildPuzzleLayer() {
 
     let puzzleClockText = new PointText({
-        position: [Settings.screen.width - 160, 25],
+        position: [config.screen.width - 160, 25],
         // content:
         fontSize: 16,
     })
     let puzzleBalanceLeft = new PointText({
-        position: [100, Settings.screen.height/2],
+        position: [100, config.screen.height/2],
         fontSize: 20,
-        fillColor: Settings.color.symbol
+        fillColor: config.color.symbol
     })
-    let leftBar = new Rectangle(new Point(125, panelPos.y), new Size(15, panelSize.height))
+    let leftBar = new Rectangle(new Point(125, panelPos.y), new Size(15, config.panel.height))
     let leftBarPath = new Path.Rectangle(leftBar, new Size(5,5))
-    leftBarPath.fillColor = Settings.color.background;
+    leftBarPath.fillColor = config.color.background;
     leftBarPath.visible = false;
     let puzzleBalanceRight = new PointText({
-        position: [Settings.screen.width - 110, Settings.screen.height/2],
+        position: [config.screen.width - 110, config.screen.height/2],
         fontSize: 20,
-        fillColor: Settings.color.symbol
+        fillColor: config.color.symbol
     })
-    let rightBar = new Rectangle(new Point(Settings.screen.width - 140, panelPos.y), new Size(15, panelSize.height))
+    let rightBar = new Rectangle(new Point(config.screen.width - 140, panelPos.y), new Size(15, config.panel.height))
     let rightBarPath = new Path.Rectangle(rightBar, new Size(5,5))
-    rightBarPath.fillColor = Settings.color.background;
+    rightBarPath.fillColor = config.color.background;
     rightBarPath.visible = false;
     let puzzleBalanceTop = new PointText({
-        position: [Settings.screen.width/2, 30],
+        position: [config.screen.width/2, 30],
         fontSize: 20,
-        fillColor: Settings.color.symbol
+        fillColor: config.color.symbol
     })
-    let topBar = new Rectangle(new Point(panelPos.x, panelPos.y - 25), new Size(panelSize.width, 15))
+    let topBar = new Rectangle(new Point(panelPos.x, panelPos.y - 25), new Size(config.panel.width, 15))
     let topBarPath = new Path.Rectangle(topBar, new Size(5,5))
-    topBarPath.fillColor = Settings.color.background;
+    topBarPath.fillColor = config.color.background;
     topBarPath.visible = false;
     let puzzleBalanceBottom = new PointText({
-        position: [Settings.screen.width/2, Settings.screen.height - 10],
+        position: [config.screen.width/2, config.screen.height - 10],
         fontSize: 20,
-        fillColor: Settings.color.symbol
+        fillColor: config.color.symbol
     })
-    let bottomBar = new Rectangle(new Point(panelPos.x, panelPos.y + panelSize.height + 10), new Size(panelSize.width, 15))
+    let bottomBar = new Rectangle(new Point(panelPos.x, panelPos.y + config.panel.height + 10), new Size(config.panel.width, 15))
     let bottomBarPath = new Path.Rectangle(bottomBar, new Size(5,5))
-    bottomBarPath.fillColor = Settings.color.background;
+    bottomBarPath.fillColor = config.color.background;
     bottomBarPath.visible = false;
     
     puzzleLayer.importSVG(Scale, {
         onLoad: function(item: any) {
             item.scale(0.05);
             item.position = new Point(140, 18);
-            item.fillColor = Settings.color.symbol;
+            item.fillColor = config.color.symbol;
         }
     });
     let puzzleMaxUnbalanced = new PointText({
@@ -123,7 +123,7 @@ function buildPuzzleLayer() {
             if (examplePuzzle.running && examplePuzzle.timeRemaining !== null) {
                 puzzleClockText.content = toTimeString(examplePuzzle.timeRemaining)
                 if (examplePuzzle.timeRemaining === 10) { 
-                    puzzleClockText.fillColor = Settings.color.warning;
+                    puzzleClockText.fillColor = config.color.warning;
                 }
             }
             if (examplePuzzle.timeRemaining === 0) {
@@ -149,11 +149,11 @@ function buildPuzzleLayer() {
                 puzzleBalanceLeft.content = (-1 * examplePuzzle.currentBalance.x).toString()
                 leftBarPath.visible = true;
                 if (examplePuzzle.currentBalance.x === - examplePuzzle.maxUnbalance) {
-                    puzzleBalanceLeft.fillColor = Settings.color.warning
-                    leftBarPath.fillColor = Settings.color.warning;
+                    puzzleBalanceLeft.fillColor = config.color.warning
+                    leftBarPath.fillColor = config.color.warning;
                 } else {
-                    puzzleBalanceLeft.fillColor = Settings.color.symbol
-                    leftBarPath.fillColor = Settings.color.background;
+                    puzzleBalanceLeft.fillColor = config.color.symbol
+                    leftBarPath.fillColor = config.color.background;
                 }
                 puzzleBalanceRight.content = ""
                 rightBarPath.visible = false;
@@ -163,11 +163,11 @@ function buildPuzzleLayer() {
                 puzzleBalanceRight.content = examplePuzzle.currentBalance.x.toString()
                 rightBarPath.visible = true;
                 if (examplePuzzle.currentBalance.x === examplePuzzle.maxUnbalance) {
-                    puzzleBalanceRight.fillColor = Settings.color.warning;
-                    rightBarPath.fillColor = Settings.color.warning;
+                    puzzleBalanceRight.fillColor = config.color.warning;
+                    rightBarPath.fillColor = config.color.warning;
                 } else {
-                    puzzleBalanceRight.fillColor = Settings.color.symbol;
-                    rightBarPath.fillColor = Settings.color.background;
+                    puzzleBalanceRight.fillColor = config.color.symbol;
+                    rightBarPath.fillColor = config.color.background;
                 }
             } else {
                 puzzleBalanceLeft.content = ""
@@ -182,11 +182,11 @@ function buildPuzzleLayer() {
                 puzzleBalanceBottom.content = "";
                 bottomBarPath.visible = false;
                 if (examplePuzzle.currentBalance.y === examplePuzzle.maxUnbalance) {
-                    puzzleBalanceTop.fillColor = Settings.color.warning;
-                    topBarPath.fillColor = Settings.color.warning;
+                    puzzleBalanceTop.fillColor = config.color.warning;
+                    topBarPath.fillColor = config.color.warning;
                 } else {
-                    puzzleBalanceTop.fillColor = Settings.color.symbol;
-                    topBarPath.fillColor = Settings.color.background;
+                    puzzleBalanceTop.fillColor = config.color.symbol;
+                    topBarPath.fillColor = config.color.background;
                 }
             } else if (examplePuzzle.currentBalance.y < 0) { 
                 puzzleBalanceTop.content = "";
@@ -194,11 +194,11 @@ function buildPuzzleLayer() {
                 puzzleBalanceBottom.content = (-1 * examplePuzzle.currentBalance.y).toString()
                 bottomBarPath.visible = true;
                 if (examplePuzzle.currentBalance.y === -examplePuzzle.maxUnbalance) {
-                    puzzleBalanceBottom.fillColor = Settings.color.warning;
-                    bottomBarPath.fillColor = Settings.color.warning;
+                    puzzleBalanceBottom.fillColor = config.color.warning;
+                    bottomBarPath.fillColor = config.color.warning;
                 } else {
-                    puzzleBalanceBottom.fillColor = Settings.color.symbol;
-                    bottomBarPath.fillColor = Settings.color.background;
+                    puzzleBalanceBottom.fillColor = config.color.symbol;
+                    bottomBarPath.fillColor = config.color.background;
                 }
             } else {
                 puzzleBalanceTop.content = "";
@@ -209,7 +209,7 @@ function buildPuzzleLayer() {
             puzzleMaxUnbalanced.content = examplePuzzle.maxUnbalance.toString()
     
             if (examplePuzzle.maxUnbalance < Math.abs(examplePuzzle.currentBalance.x) || examplePuzzle.maxUnbalance < Math.abs(examplePuzzle.currentBalance.y)){
-                examplePuzzle.restart()
+                // examplePuzzle.restart()
                 examplePuzzle.calculateBalance()
                     
             }
@@ -217,9 +217,9 @@ function buildPuzzleLayer() {
     }, 100)
 
     
-    let panel = new Rectangle(panelPos, panelSize)
+    let panel = new Rectangle(panelPos, config.panel)
     let path = new Path.Rectangle(panel, new Size(10, 10))
-    path.fillColor = Settings.color.background
+    path.fillColor = config.color.background
 }
 
 function toTimeString(time: number): string {
@@ -238,12 +238,12 @@ function setTime() {
     paper.project.importSVG(Clock, {
         onLoad: function(item: any) {
             item.scale(0.4);
-            item.position = new Point(Settings.screen.width - 100, 20)
-            item.fillColor = Settings.color.symbol
+            item.position = new Point(config.screen.width - 100, 20)
+            item.fillColor = config.color.symbol
         }
     });
     let clockText = new PointText({
-        position: [Settings.screen.width - 80, 25],
+        position: [config.screen.width - 80, 25],
         content: toTimeString(exampleTime),
         fontSize: 16,
         color: new Color(0.4, 0.4, 0.4, 1)

@@ -63,12 +63,11 @@ router.post('/closing', async function (req, res) {
   if (!user) {
       res.redirect('/dev/intro')
   }
-  let review = await ClosingReview.find({user: user})
-  if (review !== null) {
-    console.log("You have already submitted a review")
+  if (await ClosingReview.exists({user: user})) {
+    console.log("already received review")
     return res.render('closing.pug')
   }
-  review = new ClosingReview({
+  const review = new ClosingReview({
       user: user,
       strengthAndWeaknesses: req.body.strengthAndWeaknesses,
       recruitment: req.body.recruitment,

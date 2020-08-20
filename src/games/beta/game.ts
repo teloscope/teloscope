@@ -6,24 +6,18 @@ import { Puzzle, Block, Direction } from './puzzle';
 import Clock from './assets/time.svg';
 import Scale from './assets/scale.svg';
 import Star from './assets/star.svg';
-import { Settings } from './settings'
+import { config } from './config'
 
 // Variables
 let paper = new PaperScope()
 let puzzles: Puzzle[] = [];
-let examplePuzzle: Puzzle;
 let currentPuzzle: Puzzle = null;
 let gameRunning: boolean = true;
-let estimatedTimePractice: number = 0;
-const panelSize = new Size(500, 500)
-const panelPos = new Point((Settings.screen.width - panelSize.width)/2, 80)
-const averageTimePerPuzzle = Settings.completionTime / 6;
-
+let score: number = 0;
+const panelPos = new Point((config.screen.width - config.panel.width)/2, 80)
+const averageTimePerPuzzle = config.completionTime / 6;
 
 // Layers
-let explanationLayer: any;
-let testLayer: any;
-let estimationLayer: any;
 let dashboardLayer: any;
 let durationLayer: any;
 let puzzleLayer: any
@@ -34,29 +28,9 @@ window.onload = () => {
 
     paper.install(window)
     let paperCanvas = <HTMLCanvasElement> document.getElementById('gameCanvas')
-    paperCanvas.width = Settings.screen.width;
-    paperCanvas.height = Settings.screen.height;
+    paperCanvas.width = config.screen.width;
+    paperCanvas.height = config.screen.height;
     paper.setup(paperCanvas)
-
-    // explanationLayer = new Layer({
-    //     name: 'explanation',
-    //     visible: false,
-    // })
-    // buildExplanationLayer()
-
-    // testLayer = new Layer({
-    //     name: 'test',
-    //     visible: false,
-    // })
-
-    // buildTestLayer()
-
-    // estimationLayer = new Layer({
-    //     name: 'estimation',
-    //     visible: false
-    // })
-
-    // buildEstimationLayer()
 
     durationLayer = new Layer({
         name: 'duration',
@@ -77,37 +51,20 @@ window.onload = () => {
     })
     buildDashboard()
     
-
     dashboardLayer.visible = true;
     setTime()
-
-//    buildTestEnvironment()
+    showScore()
 }
 
-// TODO: Design the rest of the puzzles
 function designPuzzles() {
-    // examplePuzzle = new Puzzle({
-    //     position: new Point((Settings.screen.width - (7*70) + 10)/2, panelPos.y + 10 ),
-    //     maxUnbalance: 20,
-    //     scoreSlope: -3,
-    //     baseTime: averageTimePerPuzzle,
-    // })
-    // examplePuzzle.addBlock(Direction.Horizontal, 1, Vector.create(0,4), true)
-
-    // examplePuzzle.addBlock(Direction.Horizontal, 1, Vector.create(1,5))
-    // examplePuzzle.addBlock(Direction.Horizontal, 1, Vector.create(2,5))
-
-    // examplePuzzle.addBlock(Direction.Vertical, 1, Vector.create(3, 2))
-    // examplePuzzle.addBlock(Direction.Vertical, 2, Vector.create(2, 3))
-
-    // examplePuzzle.addPuzzleRules()
-
 
     let puzzle = new Puzzle({
-        position: new Point((Settings.screen.width - (7*70) + 10)/2, panelPos.y + 10 ),
+        position: new Point((config.screen.width - (7*70) + 10)/2, panelPos.y + 10 ),
         maxUnbalance: 2,
-        scoreSlope: -3,
+        scoreSlope: 0.1,
+        scoreIntercept: 20,
         baseTime: averageTimePerPuzzle,
+        gameNumber: 1,
     })
     puzzles.push(puzzle)
     puzzle.addBlock(Direction.Horizontal, 1, Vector.create(0,4), true)
@@ -125,13 +82,14 @@ function designPuzzles() {
     puzzle.addBlock(Direction.Vertical, 2, Vector.create(6, 3))
 
     puzzle.addPuzzleRules()
-    // puzzle.setInitialOccupanyGrid()
 
     let secondPuzzle = new Puzzle({
-        position: new Point((Settings.screen.width - (7*70) + 10)/2, panelPos.y + 10 ),
+        position: new Point((config.screen.width - (7*70) + 10)/2, panelPos.y + 10 ),
         maxUnbalance: 3,
-        scoreSlope: -3,
+        scoreSlope: 0.1,
+        scoreIntercept: 20,
         baseTime: averageTimePerPuzzle,
+        gameNumber: 2,
     })
     secondPuzzle.addBlock(Direction.Horizontal, 1, Vector.create(0,4), true)
 
@@ -146,10 +104,12 @@ function designPuzzles() {
     puzzles.push(secondPuzzle)
 
     let thirdPuzzle = new Puzzle({
-        position: new Point((Settings.screen.width - (7*70) + 10)/2, panelPos.y + 10 ),
+        position: new Point((config.screen.width - (7*70) + 10)/2, panelPos.y + 10 ),
         maxUnbalance: 2,
-        scoreSlope: -3,
+        scoreSlope: 0.1,
+        scoreIntercept: 20,
         baseTime: averageTimePerPuzzle,
+        gameNumber: 3,
     })
     thirdPuzzle.addBlock(Direction.Horizontal, 1, Vector.create(0,4), true)
 
@@ -166,30 +126,81 @@ function designPuzzles() {
     puzzles.push(thirdPuzzle)
 
     let fourthPuzzle = new Puzzle({
-        position: new Point((Settings.screen.width - (7*70) + 10)/2, panelPos.y + 10 ),
-        maxUnbalance: 4,
-        scoreSlope: -3,
+        position: new Point((config.screen.width - (7*70) + 10)/2, panelPos.y + 10 ),
+        maxUnbalance: 2,
+        scoreSlope: 0.1,
+        scoreIntercept: 20,
         baseTime: averageTimePerPuzzle,
+        gameNumber: 4,
     })
-    fourthPuzzle.addBlock(Direction.Vertical, 3, Vector.create(3,1))
+    fourthPuzzle.addBlock(Direction.Horizontal, 1, Vector.create(0,4), true)
+
+    fourthPuzzle.addBlock(Direction.Horizontal, 2, Vector.create(1,2))
+    fourthPuzzle.addBlock(Direction.Horizontal, 2, Vector.create(0,3))
+    fourthPuzzle.addBlock(Direction.Horizontal, 3, Vector.create(0,6))
+    fourthPuzzle.addBlock(Direction.Horizontal, 3, Vector.create(4,1))
+    fourthPuzzle.addBlock(Direction.Horizontal, 1, Vector.create(6,0))
+
+    fourthPuzzle.addBlock(Direction.Vertical, 2, Vector.create(1,4))
+    fourthPuzzle.addBlock(Direction.Vertical, 3, Vector.create(2,3))
+    fourthPuzzle.addBlock(Direction.Vertical, 2, Vector.create(3,0))
+    fourthPuzzle.addBlock(Direction.Vertical, 3, Vector.create(5,2))
+    fourthPuzzle.addBlock(Direction.Vertical, 3, Vector.create(6,2))
+
     fourthPuzzle.addPuzzleRules()
     puzzles.push(fourthPuzzle)
     let fifthPuzzle = new Puzzle({
-        position: new Point((Settings.screen.width - (7*70) + 10)/2, panelPos.y + 10 ),
-        maxUnbalance: 4,
-        scoreSlope: -3,
+        position: new Point((config.screen.width - (7*70) + 10)/2, panelPos.y + 10 ),
+        maxUnbalance: 2,
+        scoreSlope: 0.1,
+        scoreIntercept: 20,
         baseTime: averageTimePerPuzzle,
+        gameNumber: 5,
     })
-    fifthPuzzle.addBlock(Direction.Vertical, 3, Vector.create(3,1))
+    fifthPuzzle.addBlock(Direction.Horizontal, 1, Vector.create(0,4), true)
+
+    fifthPuzzle.addBlock(Direction.Horizontal, 2, Vector.create(0,2))
+    fifthPuzzle.addBlock(Direction.Horizontal, 3, Vector.create(0,3))
+    fifthPuzzle.addBlock(Direction.Horizontal, 2, Vector.create(4,2))
+    fifthPuzzle.addBlock(Direction.Horizontal, 1, Vector.create(6,2))
+    fifthPuzzle.addBlock(Direction.Horizontal, 2, Vector.create(5,6))
+
+    fifthPuzzle.addBlock(Direction.Vertical, 2, Vector.create(0,0))
+    fifthPuzzle.addBlock(Direction.Vertical, 2, Vector.create(1,0))
+    fifthPuzzle.addBlock(Direction.Vertical, 2, Vector.create(3,2))
+    fifthPuzzle.addBlock(Direction.Vertical, 2, Vector.create(4,3))
+    fifthPuzzle.addBlock(Direction.Vertical, 2, Vector.create(4,5))
+    fifthPuzzle.addBlock(Direction.Vertical, 3, Vector.create(6,3))
+
     fifthPuzzle.addPuzzleRules()
     puzzles.push(fifthPuzzle)
     let sixthPuzzle = new Puzzle({
-        position: new Point((Settings.screen.width - (7*70) + 10)/2, panelPos.y + 10 ),
-        maxUnbalance: 4,
-        scoreSlope: -3,
+        position: new Point((config.screen.width - (7*70) + 10)/2, panelPos.y + 10 ),
+        maxUnbalance: 5,
+        scoreSlope: 0.1,
+        scoreIntercept: 20,
         baseTime: averageTimePerPuzzle,
+        gameNumber: 6,
     })
-    sixthPuzzle.addBlock(Direction.Vertical, 3, Vector.create(3,1))
+    sixthPuzzle.addBlock(Direction.Horizontal, 1, Vector.create(0,4), true)
+
+    sixthPuzzle.addBlock(Direction.Horizontal, 2, Vector.create(2,0))
+    sixthPuzzle.addBlock(Direction.Horizontal, 2, Vector.create(5,0))
+    sixthPuzzle.addBlock(Direction.Horizontal, 2, Vector.create(0,1))
+    sixthPuzzle.addBlock(Direction.Horizontal, 2, Vector.create(5,1))
+    sixthPuzzle.addBlock(Direction.Horizontal, 2, Vector.create(1,2))
+    // sixthPuzzle.addBlock(Direction.Horizontal, 2, Vector.create(3,2))
+    sixthPuzzle.addBlock(Direction.Horizontal, 3, Vector.create(1,6))
+    sixthPuzzle.addBlock(Direction.Horizontal, 2, Vector.create(5,6))
+
+    sixthPuzzle.addBlock(Direction.Vertical, 2, Vector.create(0,2))
+    sixthPuzzle.addBlock(Direction.Vertical, 2, Vector.create(0,5))
+    sixthPuzzle.addBlock(Direction.Vertical, 3, Vector.create(1,3))
+    sixthPuzzle.addBlock(Direction.Vertical, 2, Vector.create(4,0))
+    sixthPuzzle.addBlock(Direction.Vertical, 2, Vector.create(4,5))
+    sixthPuzzle.addBlock(Direction.Vertical, 2, Vector.create(5,3))
+    sixthPuzzle.addBlock(Direction.Vertical, 3, Vector.create(6,2))
+
     sixthPuzzle.addPuzzleRules()
     puzzles.push(sixthPuzzle)
 }
@@ -197,52 +208,52 @@ function designPuzzles() {
 function buildPuzzleLayer() {
 
     let puzzleClockText = new PointText({
-        position: [Settings.screen.width - 160, 25],
+        position: [config.screen.width - 160, 25],
         // content:
         fontSize: 16,
     })
     let puzzleBalanceLeft = new PointText({
-        position: [100, Settings.screen.height/2],
+        position: [100, config.screen.height/2],
         fontSize: 20,
-        fillColor: Settings.color.symbol
+        fillColor: config.color.symbol
     })
-    let leftBar = new Rectangle(new Point(125, panelPos.y), new Size(15, panelSize.height))
+    let leftBar = new Rectangle(new Point(125, panelPos.y), new Size(15, config.panel.height))
     let leftBarPath = new Path.Rectangle(leftBar, new Size(5,5))
-    leftBarPath.fillColor = Settings.color.background;
+    leftBarPath.fillColor = config.color.background;
     leftBarPath.visible = false;
     let puzzleBalanceRight = new PointText({
-        position: [Settings.screen.width - 110, Settings.screen.height/2],
+        position: [config.screen.width - 110, config.screen.height/2],
         fontSize: 20,
-        fillColor: Settings.color.symbol
+        fillColor: config.color.symbol
     })
-    let rightBar = new Rectangle(new Point(Settings.screen.width - 140, panelPos.y), new Size(15, panelSize.height))
+    let rightBar = new Rectangle(new Point(config.screen.width - 140, panelPos.y), new Size(15, config.panel.height))
     let rightBarPath = new Path.Rectangle(rightBar, new Size(5,5))
-    rightBarPath.fillColor = Settings.color.background;
+    rightBarPath.fillColor = config.color.background;
     rightBarPath.visible = false;
     let puzzleBalanceTop = new PointText({
-        position: [Settings.screen.width/2, 30],
+        position: [config.screen.width/2, 30],
         fontSize: 20,
-        fillColor: Settings.color.symbol
+        fillColor: config.color.symbol
     })
-    let topBar = new Rectangle(new Point(panelPos.x, panelPos.y - 25), new Size(panelSize.width, 15))
+    let topBar = new Rectangle(new Point(panelPos.x, panelPos.y - 25), new Size(config.panel.width, 15))
     let topBarPath = new Path.Rectangle(topBar, new Size(5,5))
-    topBarPath.fillColor = Settings.color.background;
+    topBarPath.fillColor = config.color.background;
     topBarPath.visible = false;
     let puzzleBalanceBottom = new PointText({
-        position: [Settings.screen.width/2, Settings.screen.height - 10],
+        position: [config.screen.width/2, config.screen.height - 10],
         fontSize: 20,
-        fillColor: Settings.color.symbol
+        fillColor: config.color.symbol
     })
-    let bottomBar = new Rectangle(new Point(panelPos.x, panelPos.y + panelSize.height + 10), new Size(panelSize.width, 15))
+    let bottomBar = new Rectangle(new Point(panelPos.x, panelPos.y + config.panel.height + 10), new Size(config.panel.width, 15))
     let bottomBarPath = new Path.Rectangle(bottomBar, new Size(5,5))
-    bottomBarPath.fillColor = Settings.color.background;
+    bottomBarPath.fillColor = config.color.background;
     bottomBarPath.visible = false;
     
     puzzleLayer.importSVG(Scale, {
         onLoad: function(item: any) {
             item.scale(0.05);
             item.position = new Point(140, 18);
-            item.fillColor = Settings.color.symbol;
+            item.fillColor = config.color.symbol;
         }
     });
     let puzzleMaxUnbalanced = new PointText({
@@ -255,7 +266,7 @@ function buildPuzzleLayer() {
             if (currentPuzzle.running && currentPuzzle.timeRemaining !== null) {
                 puzzleClockText.content = toTimeString(currentPuzzle.timeRemaining)
                 if (currentPuzzle.timeRemaining === 10) { 
-                    puzzleClockText.fillColor = Settings.color.warning;
+                    puzzleClockText.fillColor = config.color.warning;
                 }
             }
             if (currentPuzzle.timeRemaining === 0) {
@@ -266,19 +277,15 @@ function buildPuzzleLayer() {
                 puzzleLayer.visible = false;
             }
             if (currentPuzzle.completed) {
-                if(currentPuzzle === examplePuzzle){
-                    estimationLayer.visible = true
-                    puzzleLayer.visible = false
-                    examplePuzzle.completed = false
+                if(puzzleLayer.visible == true){
+                    score += currentPuzzle.score
                 }
-                else {
-                    currentPuzzle.puzzleCompletedText.visible = true
-                    updateDashboard()
-                    dashboardLayer.visible = true;
-                    currentPuzzle.pause()
-                    puzzleClockText.content = ""
-                    puzzleLayer.visible = false;
-                }
+                currentPuzzle.puzzleCompletedText.visible = true
+                updateDashboard()
+                dashboardLayer.visible = true;
+                currentPuzzle.pause()
+                puzzleClockText.content = ""
+                puzzleLayer.visible = false;
             }
             else {
                 currentPuzzle.puzzleCompletedText.visible = false
@@ -292,11 +299,11 @@ function buildPuzzleLayer() {
                 puzzleBalanceLeft.content = (-1 * currentPuzzle.currentBalance.x).toString()
                 leftBarPath.visible = true;
                 if (currentPuzzle.currentBalance.x === - currentPuzzle.maxUnbalance) {
-                    puzzleBalanceLeft.fillColor = Settings.color.warning
-                    leftBarPath.fillColor = Settings.color.warning;
+                    puzzleBalanceLeft.fillColor = config.color.warning
+                    leftBarPath.fillColor = config.color.warning;
                 } else {
-                    puzzleBalanceLeft.fillColor = Settings.color.symbol
-                    leftBarPath.fillColor = Settings.color.background;
+                    puzzleBalanceLeft.fillColor = config.color.symbol
+                    leftBarPath.fillColor = config.color.background;
                 }
                 puzzleBalanceRight.content = ""
                 rightBarPath.visible = false;
@@ -306,11 +313,11 @@ function buildPuzzleLayer() {
                 puzzleBalanceRight.content = currentPuzzle.currentBalance.x.toString()
                 rightBarPath.visible = true;
                 if (currentPuzzle.currentBalance.x === currentPuzzle.maxUnbalance) {
-                    puzzleBalanceRight.fillColor = Settings.color.warning;
-                    rightBarPath.fillColor = Settings.color.warning;
+                    puzzleBalanceRight.fillColor = config.color.warning;
+                    rightBarPath.fillColor = config.color.warning;
                 } else {
-                    puzzleBalanceRight.fillColor = Settings.color.symbol;
-                    rightBarPath.fillColor = Settings.color.background;
+                    puzzleBalanceRight.fillColor = config.color.symbol;
+                    rightBarPath.fillColor = config.color.background;
                 }
             } else {
                 puzzleBalanceLeft.content = ""
@@ -325,11 +332,11 @@ function buildPuzzleLayer() {
                 puzzleBalanceBottom.content = "";
                 bottomBarPath.visible = false;
                 if (currentPuzzle.currentBalance.y === currentPuzzle.maxUnbalance) {
-                    puzzleBalanceTop.fillColor = Settings.color.warning;
-                    topBarPath.fillColor = Settings.color.warning;
+                    puzzleBalanceTop.fillColor = config.color.warning;
+                    topBarPath.fillColor = config.color.warning;
                 } else {
-                    puzzleBalanceTop.fillColor = Settings.color.symbol;
-                    topBarPath.fillColor = Settings.color.background;
+                    puzzleBalanceTop.fillColor = config.color.symbol;
+                    topBarPath.fillColor = config.color.background;
                 }
             } else if (currentPuzzle.currentBalance.y < 0) { 
                 puzzleBalanceTop.content = "";
@@ -337,11 +344,11 @@ function buildPuzzleLayer() {
                 puzzleBalanceBottom.content = (-1 * currentPuzzle.currentBalance.y).toString()
                 bottomBarPath.visible = true;
                 if (currentPuzzle.currentBalance.y === -currentPuzzle.maxUnbalance) {
-                    puzzleBalanceBottom.fillColor = Settings.color.warning;
-                    bottomBarPath.fillColor = Settings.color.warning;
+                    puzzleBalanceBottom.fillColor = config.color.warning;
+                    bottomBarPath.fillColor = config.color.warning;
                 } else {
-                    puzzleBalanceBottom.fillColor = Settings.color.symbol;
-                    bottomBarPath.fillColor = Settings.color.background;
+                    puzzleBalanceBottom.fillColor = config.color.symbol;
+                    bottomBarPath.fillColor = config.color.background;
                 }
             } else {
                 puzzleBalanceTop.content = "";
@@ -352,9 +359,8 @@ function buildPuzzleLayer() {
             puzzleMaxUnbalanced.content = currentPuzzle.maxUnbalance.toString()
     
             if (currentPuzzle.maxUnbalance < Math.abs(currentPuzzle.currentBalance.x) || currentPuzzle.maxUnbalance < Math.abs(currentPuzzle.currentBalance.y)){
-                currentPuzzle.restart()
+                // currentPuzzle.restart()
                 currentPuzzle.calculateBalance()
-                    
             }
         }
     }, 100)
@@ -363,112 +369,28 @@ function buildPuzzleLayer() {
     createReturn()
 
     
-    let panel = new Rectangle(panelPos, panelSize)
+    let panel = new Rectangle(panelPos, config.panel)
     let path = new Path.Rectangle(panel, new Size(10, 10))
-    path.fillColor = Settings.color.background
+    path.fillColor = config.color.background
 }
-
-function buildExplanationLayer(){
-    let title = new PointText({
-        position: [Settings.screen.width/2, 50],
-        content: "Game Overview",
-        fontSize: 30,
-        strokeColor: new Color(0.4, 0.4, 0.4, 1),
-    })
-
-    let rules = new PointText({
-        position: [50, 150],
-        content: "The game has blocks which can either move in the horizontal direction or the vertical direction",
-        fontSize: 16,
-        strokeColor: new Color(0.4, 0.4, 0.4, 1),
-    })
-
-    let win = new PointText({
-        position: [50, 200],
-        content: "The goal of the game is to get the red block from one side of the screen to the other",
-        fontSize: 16,
-        strokeColor: new Color(0.4, 0.4, 0.4, 1),
-    })
-
-    let ready = new PointText({
-        position: [50, 300],
-        content: "Click here when you are ready",
-        fontSize: 16,
-        strokeColor: new Color(0.4, 0.4, 0.4, 1),
-    })
-
-    ready.onClick = function(event: any) {
-        explanationLayer.visible = false;
-        buildTestEnvironment()
-    }
-
-}
-
-function buildTestLayer(){
-    let title = new PointText({
-        position: [screen.width/2, 50],
-        content: "Game Overview",
-        fontSize: 30,
-        strokeColor: new Color(0.4, 0.4, 0.4, 1),
-    })
-
-    let rules = new PointText({
-        position: [50, 150],
-        content: "There is 6 games and you have 5 minutes to complete as many as possible, before each game you have to predict how long it will take you",
-        fontSize: 16,
-        strokeColor: new Color(0.4, 0.4, 0.4, 1),
-    })
-
-    let win = new PointText({
-        position: [50, 200],
-        content: "the quicker you complete a game the more points as well as the quicker you predict you can complete it and do so the more points ",
-        fontSize: 16,
-        strokeColor: new Color(0.4, 0.4, 0.4, 1),
-    })
-
-    let ready = new PointText({
-        position: [50, 400],
-        content: "Click here to start",
-        fontSize: 16,
-        strokeColor: new Color(0.4, 0.4, 0.4, 1),
-    })
-
-    ready.onClick = function(event: any) {
-        examplePuzzle.completed = false;
-        testLayer.visible = false;
-        dashboardLayer.visible = true;
-        examplePuzzle.completed = false
-        
-        setTime()
-    }
-
-}
-
-function buildTestEnvironment(){
-    loadPuzzle(examplePuzzle)
-    puzzleLayer.visible = true
-    puzzleLayer.children[10].visible = false;
-}
-
 
 function buildDashboard() {
 
     new PointText({
-        position: [Settings.screen.width/2 - 35, 60],
+        position: [config.screen.width/2 - 35, 60],
         content: "Puzzles",
         fontSize: 24,
     })
 
     dashboardPuzzles = new Group()
 
-
     const rows = 2;
     const columns = 3;
     const rectSize = new Size(200, 200);
     const spacing = 30;
     const rectRadius = new Size(10, 10)
-    let rectOffset = new Point((Settings.screen.width - (columns * rectSize.width + (columns - 1) * spacing)) / 2,
-    (Settings.screen.height - (rows * rectSize.height + (rows - 1) * spacing))/2)
+    let rectOffset = new Point((config.screen.width - (columns * rectSize.width + (columns - 1) * spacing)) / 2,
+    (config.screen.height - (rows * rectSize.height + (rows - 1) * spacing))/2)
     for (let y = 0; y < rows; y++) {
         for (let x = 0; x < columns; x++) {
             let puzzleIcon = new Group()
@@ -476,7 +398,7 @@ function buildDashboard() {
             let rectangle = new Rectangle(new Point(rectOffset.x + (x * (rectSize.width + spacing)),
             rectOffset.y + (y * (rectSize.height + spacing))), rectSize)
             let path = new Path.Rectangle(rectangle, rectRadius)
-            path.fillColor = Settings.color.background
+            path.fillColor = config.color.background
             path.name = "panel" + idx
             let graphic = puzzles[idx].graphic.clone()
             graphic.scale(0.3)
@@ -503,14 +425,14 @@ function buildDashboard() {
                 onLoad: function(item: any) {
                     item.scale(0.05);
                     item.position = new Point(rectangle.bottomLeft.x + 40, rectangle.bottomLeft.y - 20)
-                    item.fillColor = Settings.color.symbol
+                    item.fillColor = config.color.symbol
                 }
             });
             puzzleIcon.importSVG(Star, {
                 onLoad: function(item: any) {
                     item.scale(0.05);
                     item.position = new Point(rectangle.bottomLeft.x + 140, rectangle.bottomLeft.y - 20)
-                    item.fillColor = Settings.color.symbol
+                    item.fillColor = config.color.symbol
                 }
             });
             puzzleIcon.onClick = () => {
@@ -553,60 +475,6 @@ function updateDashboard() {
     }
 }
 
-function buildEstimationLayer() {
-    let question = new PointText({
-        point: [80, 200],
-        content: "How long do you think it took you to finish that task?",
-        fontSize: 24,
-    })
-
-    const estimatedTime = {
-        lower: 0,
-        upper: 100,
-        current: 50,
-        step: 10,
-    }
-
-    const rectSize = new Size (600, 20)
-    let rectangle = new Rectangle(new Point((Settings.screen.width - rectSize.width)/2, 300), rectSize)
-    let path = new Path.Rectangle(rectangle, new Size(rectSize.height/2, rectSize.height/2))
-    path.fillColor = Settings.color.background
-
-    let timeText = new PointText({
-        point: [rectangle.center.x - 40, rectangle.center.y + 50],
-        content: estimatedTime.current + " seconds",
-        fontSize: 16,
-    })
-
-    let dummyCircle = new Path.Circle(new Point(Settings.screen.width/2, 310), 20)
-    dummyCircle.fillColor = new Color('red')
-    dummyCircle.onMouseDrag = (event: any) => {
-        let x = event.point.x;
-        if (x > rectangle.bottomRight.x) {
-            dummyCircle.position.x = rectangle.bottomRight.x
-        } else if ( x < rectangle.bottomLeft.x) {
-            dummyCircle.position.x = rectangle.bottomLeft.x
-        } else {
-            dummyCircle.position.x = event.point.x;
-        }
-        estimatedTime.current = Math.round(((dummyCircle.position.x - rectangle.bottomLeft.x)/ rectangle.width)
-        * (estimatedTime.upper - estimatedTime.lower))
-        timeText.content = estimatedTime.current + " seconds"
-    }
-
-    let startText2 = new PointText({
-        point: [Settings.screen.width/2 - 80, 450],
-        content: "Start Challenge",
-        fontSize: 24,
-    })
-    startText2.onClick = () => {
-        console.log("You thought it took you  " + estimatedTime.current + " seconds to complete the practice game.")
-        examplePuzzle.estimatedCompletionTime = estimatedTime.current
-        testLayer.visible = true;
-        estimationLayer.visible = false;
-    }
-}
-
 function buildDurationLayer() {
     let question = new PointText({
         point: [80, 200],
@@ -616,15 +484,15 @@ function buildDurationLayer() {
 
     const estimatedTime = {
         lower: 0,
-        upper: 100,
-        current: 50,
-        step: 5,
+        upper: 180,
+        current: 100,
+        step: 10,
     }
 
     const rectSize = new Size (600, 20)
-    let rectangle = new Rectangle(new Point((Settings.screen.width - rectSize.width)/2, 300), rectSize)
+    let rectangle = new Rectangle(new Point((config.screen.width - rectSize.width)/2, 300), rectSize)
     let path = new Path.Rectangle(rectangle, new Size(rectSize.height/2, rectSize.height/2))
-    path.fillColor = Settings.color.background
+    path.fillColor = config.color.background
 
     let timeText = new PointText({
         point: [rectangle.center.x - 40, rectangle.center.y + 50],
@@ -632,7 +500,7 @@ function buildDurationLayer() {
         fontSize: 16,
     })
 
-    let dummyCircle = new Path.Circle(new Point(Settings.screen.width/2, 310), 20)
+    let dummyCircle = new Path.Circle(new Point(config.screen.width/2, 310), 20)
     dummyCircle.fillColor = new Color('red')
     dummyCircle.onMouseDrag = (event: any) => {
         let x = event.point.x;
@@ -648,10 +516,17 @@ function buildDurationLayer() {
         estimatedTime.current = Math.round(((dummyCircle.position.x - rectangle.bottomLeft.x)/ rectangle.width)
         * (estimatedTime.upper - estimatedTime.lower))
         timeText.content = estimatedTime.current + " seconds"
+        scoreText.content = "Score: " + (20 - estimatedTime.current/10)
     }
 
+    let scoreText = new PointText({
+        point: [config.screen.width/2-40 , 270],
+        content: "Score: " + (20 - estimatedTime.current/10),
+        fontSize: 24,
+    })  
+
     let startText = new PointText({
-        point: [Settings.screen.width/2 - 80, 450],
+        point: [config.screen.width/2 - 80, 450],
         content: "Start Challenge",
         fontSize: 24,
     })
@@ -666,10 +541,6 @@ function buildDurationLayer() {
 
     createReturn()
 
-}
-
-function updateDuration() {
-    
 }
 
 function createReturn() {
@@ -692,10 +563,11 @@ function createReturn() {
     iconGroup.onClick = () => {
         console.log("Let's go home")
         updateDashboard()
-        dashboardLayer.visible = true;
-        gameRunning = true;
+        currentPuzzle.pause()
         durationLayer.visible = false;
         puzzleLayer.visible = false;
+        dashboardLayer.visible = true;
+        gameRunning = true;
     }
 }
 
@@ -706,27 +578,51 @@ function setTime() {
     paper.project.importSVG(Clock, {
         onLoad: function(item: any) {
             item.scale(0.4);
-            item.position = new Point(Settings.screen.width - 100, 20)
-            item.fillColor = Settings.color.symbol
+            item.position = new Point(config.screen.width - 100, 20)
+            item.fillColor = config.color.symbol
         }
     });
     let clockText = new PointText({
-        position: [Settings.screen.width - 80, 25],
-        content: toTimeString(Settings.completionTime),
+        position: [config.screen.width - 80, 25],
+        content: toTimeString(config.completionTime),
         fontSize: 16,
         color: new Color(0.4, 0.4, 0.4, 1)
     })
+
     setInterval(() => {
         if (gameRunning) {
-            Settings.completionTime--;
-            clockText.content = toTimeString(Settings.completionTime)
-            if (Settings.completionTime == 10) { 
-                clockText.fillColor = Settings.color.warning;
+            config.completionTime--;
+            clockText.content = toTimeString(config.completionTime)
+            if (config.completionTime == 10) { 
+                clockText.fillColor = config.color.warning;
             }
-            if (Settings.completionTime == 0) {
-                window.location.href = "/end";
+            if (config.completionTime == 0) {
+                window.location.href = config.endUrl;
             }
         }
+    }, 1000)
+}
+
+function showScore() {
+    new Layer({
+        name: "score",
+    })
+    paper.project.importSVG(Star, {
+        onLoad: function(item: any) {
+            item.scale(0.05);
+            item.position = new Point(config.screen.width - 260, 20)
+            item.fillColor = config.color.symbol
+        }
+    });
+    let scoreText = new PointText({
+        position: [config.screen.width - 240, 25],
+        content: toTimeString(config.completionTime),
+        fontSize: 16,
+        color: new Color(0.4, 0.4, 0.4, 1)
+    })
+
+    setInterval(() => {
+        scoreText.content =score.toString()
     }, 1000)
 }
 
@@ -746,12 +642,4 @@ function toTimeString(time: number): string {
     if (seconds === 0) { return minutes + ":00" }
     if (seconds < 10) { return minutes + ":0" + seconds}
     return minutes + ":" + seconds
-}
-
-function wait(ms: number){
-    var start = new Date().getTime();
-    var end = start;
-    while(end < start + ms) {
-        end = new Date().getTime();
-    }
 }

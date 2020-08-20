@@ -21,8 +21,8 @@ router.post('/game', async function(req, res, next) {
     console.log("received data:")
     console.log(req.body)
     let user = getUserID(req, res)
-    let data = await GammaData.find({user: user})
-    if (data !== null) {
+    if (await GammaData.exists({user: user, gameNumber: req.body.gameNumber})) {
+        console.log("Already received data from user for gamma game")
         return res.status(200).send({"message": "Already received data from user for gamma game"})
     }
     data = new GammaData({
@@ -45,21 +45,23 @@ router.post('/review', async function(req, res, next) {
     console.log("received review")
     let user = getUserID(req, res)
     // check to see if the user has already done the review
-    let review = await GammaReview.find({user: user})
-    if (review === null) {
-        review = new GammaReview({
-            user: user,
-            learningRate: (req.body.learning) ? parseInt(req.body.learning) : 0,
-            difficulty: (req.body.difficulty) ? parseInt(req.body.difficulty) : 0,
-            testing: req.body.testing,
-            performance: (req.body.performance) ? parseInt(req.body.performance) : 0,
-            improvements: req.body.improvements,
-            overall: (req.body.overall) ? parseInt(req.body.overall): 0,
-            general: req.body.general,
-        })
-        review.save()
+    if (await GammaReview.exists({user: user})) {
+        console.log("review already exists")
+        return res.render('delta/instructions.pug', {game: "delta"})
     }
-    res.render('delta/instructions.pug', {game: "delta"})
+    const review = new GammaReview({
+        user: user,
+        learningRate: (req.body.learning) ? parseInt(req.body.learning) : 0,
+        difficulty: (req.body.difficulty) ? parseInt(req.body.difficulty) : 0,
+        testing: req.body.testing,
+        performance: (req.body.performance) ? parseInt(req.body.performance) : 0,
+        improvements: req.body.improvements,
+        overall: (req.body.overall) ? parseInt(req.body.overall): 0,
+        general: req.body.general,
+    })
+    console.log(review)
+    review.save()
+    return res.render('delta/instructions.pug', {game: "delta"})
 })
 
 function getUserID(req, res) {

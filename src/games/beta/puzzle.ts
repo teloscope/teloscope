@@ -1,6 +1,8 @@
 import { Group, Rectangle, Point, Size, Path, Color, PointText } from 'paper'
 import { Vector } from 'matter-js';
-import { Settings } from './settings';
+import { config } from './config';
+import { NewData } from './data';
+import axios from 'axios';
 
 const defaultGrid = Vector.create(7, 7)
 const defaultBaseTime: number = 50
@@ -22,13 +24,11 @@ export class Puzzle {
     running: boolean = false;
     
     score: number = null;
-    scoreSlope: number;
-    scoreIntercept: number;
+    scoreSlope: number = 0.1;
+    scoreIntercept: number = 20;
     baseTime: number;
+    data = NewData()
     
-
-    // constructor(public grid: Vector = defaultGrid, public pos: any, public maxUnbalance: number, 
-    // public isPractice: boolean = false, public baseTime: number, public scoreSlope: number, public scoreIntercept: number) {
     constructor(po: PuzzleOptions) {
         this.grid = po.grid !== undefined ? po.grid : this.grid = defaultGrid ;
         this.pos = po.position
@@ -36,6 +36,7 @@ export class Puzzle {
         this.baseTime = po.baseTime !== undefined ? po.baseTime : this.baseTime = defaultBaseTime
         this.scoreSlope = po.scoreSlope;
         this.scoreIntercept = po.scoreIntercept
+        this.data.gameNumber = po.gameNumber
         
         this.graphic = new Group()
         for (let x = 0; x < this.grid.x; x++) {
@@ -89,8 +90,7 @@ export class Puzzle {
         strokeColor: new Color('red'),
         strokeWidth: 4
     })
-
-
+    
     addBlock(direction: Direction, length: number, pos: Vector, isKey = false): void{
         let blockPos = this.gridToAbsolute(pos)
         let newBlock = new Block(direction, length, blockPos, pos, isKey)
@@ -112,6 +112,8 @@ export class Puzzle {
             this.estimatedCompletionTime = time;
             this.timeRemaining = time;
             this.score = this.calculateScore(time)
+            this.data.estimatedTime = time
+            this.data.score = this.score
         }
     }
 
@@ -129,6 +131,7 @@ export class Puzzle {
         }
         this.currentBalance = Vector.create(xBalance, yBalance)
         if (xBalance > this.maxUnbalance || yBalance > this.maxUnbalance) {
+            this.data.lostBalanceCount++
             this.restart()
         }
     }
@@ -199,8 +202,8 @@ export class Puzzle {
                     let diff = event.point.x - block.clickedPos;
                     let proposedNewPosition = diff + block.originalPos
                     // console.log(proposedNewPosition)
-                    let absLowerBound = block.originalPos - (block.gridPos.x - block.lowerBound) * (Settings.block.size + Settings.block.padding)
-                    let absUpperBound = block.originalPos + (block.upperBound - block.gridPos.x) * (Settings.block.size + Settings.block.padding)
+                    let absLowerBound = block.originalPos - (block.gridPos.x - block.lowerBound) * (config.block.size + config.block.padding)
+                    let absUpperBound = block.originalPos + (block.upperBound - block.gridPos.x) * (config.block.size + config.block.padding)
                     if ( proposedNewPosition > absLowerBound &&
                     proposedNewPosition < absUpperBound  ) {
                         block.graphic.position.x = proposedNewPosition;
@@ -209,8 +212,8 @@ export class Puzzle {
                     let diff = event.point.y - block.clickedPos;
                     let proposedNewPosition = diff + block.originalPos
                     // console.log(proposedNewPosition)
-                    let absLowerBound = block.originalPos - (block.gridPos.y - block.lowerBound) * (Settings.block.size + Settings.block.padding)
-                    let absUpperBound = block.originalPos + (block.upperBound - block.gridPos.y) * (Settings.block.size + Settings.block.padding)
+                    let absLowerBound = block.originalPos - (block.gridPos.y - block.lowerBound) * (config.block.size + config.block.padding)
+                    let absUpperBound = block.originalPos + (block.upperBound - block.gridPos.y) * (config.block.size + config.block.padding)
                     if ( proposedNewPosition > absLowerBound &&
                     proposedNewPosition < absUpperBound  ) {
                         block.graphic.position.y = proposedNewPosition;
@@ -222,19 +225,19 @@ export class Puzzle {
                     console.log("mouseUp")
                     if (block.direction == Direction.Horizontal) {
                         let diff = block.graphic.position.x - block.originalPos
-                        let delta = Math.round(diff / (Settings.block.size + Settings.block.padding))
+                        let delta = Math.round(diff / (config.block.size + config.block.padding))
                         console.log("delta: " + delta)
                         block.gridPos.x += delta
-                        block.graphic.position.x = block.originalPos + (delta * (Settings.block.size + Settings.block.padding))
+                        block.graphic.position.x = block.originalPos + (delta * (config.block.size + config.block.padding))
                         for (let i = block.gridPos.x; i < block.gridPos.x + block.length; i++) {
                             this.occupancyGrid[i][block.gridPos.y] = true;
                         }
                     } else {
                         let diff = block.graphic.position.y - block.originalPos
-                        let delta = Math.round(diff / (Settings.block.size + Settings.block.padding))
+                        let delta = Math.round(diff / (config.block.size + config.block.padding))
                         console.log("delta: " + delta)
                         block.gridPos.y += delta
-                        block.graphic.position.y = block.originalPos + (delta * (Settings.block.size + Settings.block.padding))
+                        block.graphic.position.y = block.originalPos + (delta * (config.block.size + config.block.padding))
                         for (let i = block.gridPos.y; i < block.gridPos.y + block.length; i++) {
                             this.occupancyGrid[block.gridPos.x][i] = true;
                         }
@@ -242,6 +245,8 @@ export class Puzzle {
                     this.calculateBalance()
                     if (block.isGameCompleted()){
                         this.completed = true
+                        this.data.completedTime = this.estimatedCompletionTime - this.timeRemaining
+                        axios.post(config.dataUrl, this.data)
                     }
                     this.chosenBlock = null;
                 }
@@ -251,12 +256,12 @@ export class Puzzle {
     }
 
     gridToAbsolute(pos: Vector): any {
-        return new Point(this.pos.x + pos.x * (Settings.block.size + Settings.block.padding),
-        this.pos.y + pos.y * (Settings.block.size + Settings.block.padding));
+        return new Point(this.pos.x + pos.x * (config.block.size + config.block.padding),
+        this.pos.y + pos.y * (config.block.size + config.block.padding));
     }
     
     calculateScore(time: number): number {
-        return this.scoreIntercept + (this.scoreSlope * time)
+        return this.scoreIntercept - (this.scoreSlope * time)
     }
 
 }
@@ -277,19 +282,19 @@ export class Block {
         this.direction = direction;
         this.length = length;
         this.rectangle = new Rectangle(pos,
-        new Size(Settings.block.size + (direction * (length -1) * (Settings.block.size + Settings.block.padding)),
-        Settings.block.size + ((1 - direction) * (length -1) * (Settings.block.size + Settings.block.padding))))
-        this.graphic = new Path.Rectangle(this.rectangle, Settings.block.fillet)
+        new Size(config.block.size + (direction * (length -1) * (config.block.size + config.block.padding)),
+        config.block.size + ((1 - direction) * (length -1) * (config.block.size + config.block.padding))))
+        this.graphic = new Path.Rectangle(this.rectangle, config.block.fillet)
         this.initialGraphicPos = this.graphic.position.clone()
         this.isKey = isKey
         if(this.isKey){
-            this.graphic.fillColor = Settings.color.keyColour
+            this.graphic.fillColor = config.color.keyColour
         }
         else if (this.direction == Direction.Vertical){
-            this.graphic.fillColor = Settings.color.verticalColour
+            this.graphic.fillColor = config.color.verticalColour
         }
         else{
-            this.graphic.fillColor = Settings.color.horizontalColour
+            this.graphic.fillColor = config.color.horizontalColour
         }
     }
 
@@ -298,7 +303,7 @@ export class Block {
             this.graphic.remove()
         }
         this.rectangle.position = pos
-        this.graphic = new Path.Rectangle(this.rectangle, Settings.block.fillet)
+        this.graphic = new Path.Rectangle(this.rectangle, config.block.fillet)
     }
 
     reset(){
@@ -323,7 +328,8 @@ export type PuzzleOptions = {
     maxUnbalance: number, 
     baseTime: number, 
     scoreSlope: number,
-    scoreIntercept?: number, 
+    scoreIntercept?: number,
+    gameNumber: number,
 }
 
 export enum Direction {

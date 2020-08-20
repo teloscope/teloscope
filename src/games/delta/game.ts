@@ -1,7 +1,7 @@
-import { Game, Entity, Controller, Vector } from 'entropi';
-import { PaperScope, Size, Path, Point, Color, Group, Rectangle } from 'paper'
+import { Game, Entity, Vector } from 'entropi';
+import { PaperScope } from 'paper'
 import { PaperRenderer } from './renderer'
-import { GridEngine, Block, ENGINE_UPDATE_INTERVAL } from './physics'
+import { GridEngine, ENGINE_UPDATE_INTERVAL } from './physics'
 import { config } from './config'
 import game1 from './game1.json'
 import game2 from './game2.json'
@@ -61,7 +61,7 @@ function update(game: Game) {
             game.physics.remove(entity.body)
         })
         if (currentGame === games.length) {
-            window.location.href = "/end"
+            window.location.href = "/dev/delta/review"
         } else {
             game.create(game)
         }

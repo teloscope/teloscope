@@ -9,9 +9,11 @@ var logger = require('morgan');
 const mongoose = require('mongoose');
 
 mongoose.connect(process.env.DATABASE_URL || "mongodb://localhost/teloscope", { useNewUrlParser: true, useUnifiedTopology: true});
-const db = mongoose.connection;
-db.on('error', (error) => console.error(error));
-db.once('open', () => console.log("Connected to database"));
+const conn = mongoose.connection;
+conn.on('error', (error) => console.error(error));
+conn.once('open', () => {
+  console.log("Connected to database")
+});
 
 var indexRouter = require('./routes/index');
 var devRouter = require('./routes/dev');
