@@ -7,7 +7,6 @@ export type GameData = {
     undos: number,
     restarts: number,
     idleTime: number,
-    
     // time it takes to form each sentence
     sentenceFormedTime: number[]
 }

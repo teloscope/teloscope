@@ -18,6 +18,8 @@ export const config = {
     force: 0.004,
     
     // for sending game data
-    server: "/dev/delta/game"
-
+    dataURL: "/dev/delta/game",
+    
+    // for ending the game
+    endURL: "/dev/delta/review",
 }
