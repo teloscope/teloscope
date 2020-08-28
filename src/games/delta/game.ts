@@ -53,7 +53,7 @@ function update(game: Game) {
         engine.completed = false; 
         engine.gameData.gameNumber = currentGame
         // send game data to the server
-        axios.post(config.server, engine.gameData)
+        axios.post(config.dataURL, engine.gameData)
         currentGame++;
         engine.clear()
         game.entities.forEach(entity => {
@@ -61,7 +61,7 @@ function update(game: Game) {
             game.physics.remove(entity.body)
         })
         if (currentGame === games.length) {
-            window.location.href = "/dev/delta/review"
+            window.location.href = config.endURL;
         } else {
             game.create(game)
         }
