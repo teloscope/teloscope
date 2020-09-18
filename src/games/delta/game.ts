@@ -50,21 +50,7 @@ function create(game: Game) {
 function update(game: Game) {
     engine.input(game.input)
     if (engine.completed) {
-        engine.completed = false; 
-        engine.gameData.gameNumber = currentGame
-        // send game data to the server
-        axios.post(config.server, engine.gameData)
-        currentGame++;
-        engine.clear()
-        game.entities.forEach(entity => {
-            game.renderer.remove(entity.sprite)
-            game.physics.remove(entity.body)
-        })
-        if (currentGame === games.length) {
-            window.location.href = "/dev/delta/review"
-        } else {
-            game.create(game)
-        }
+        engine.reset()
     }
 }
 function load(setup: any): Entity[] {

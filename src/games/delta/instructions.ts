@@ -8,7 +8,7 @@ import instructionGame from './instructionGame.json'
 
 let paper = new PaperScope()
 let symbol = new PaperScope()
-config.screen.height = 200;
+// config.screen.height = 200;
 const gridSize = {
     x: config.screen.width / config.unitSize.width, 
     y: config.screen.height / config.unitSize.height,
@@ -49,14 +49,23 @@ window.onload = () => {
 function create(game: Game) {
     game.input.Key.SPACE.style = 1 
     game.add.entities(load(instructionGame))
+    engine.setDefaultMoveable(["symbol_control", "symbol_you", "symbol_move", "symbol_black_player", 
+        "symbol_green_gate", "symbol_red_player", "symbol_yellow_gate", "symbol_win", "symbol_red_gate"])
     engine.setControlling("black_player")
+    engine.updateRules()
 }
 
 function update(game: Game) {
     engine.input(game.input)
-    // engine.setControlling("black_player")
-    engine.controlling = engine.getBlocks("black_player")
-    engine.setMoveable("black_player", ["green_gate", "red_gate"])
+    if (engine.completed) {
+        engine.clear()
+        game.entities.forEach(entity => {
+            game.renderer.remove(entity.sprite)
+            game.physics.remove(entity.body)
+        })
+        game.create(game)
+    }
+    
 }
 
 function load(setup: any): Entity[] {
