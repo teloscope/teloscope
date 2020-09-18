@@ -121,6 +121,7 @@ export class Puzzle {
         let xBalance = 0;
         let yBalance = 0;
 
+
         for (let i: number = 0; i < this.grid.x; i ++) {
             for (let j: number = 0; j < this.grid.y; j ++){
                 if (this.occupancyGrid[i][j]){
@@ -129,8 +130,10 @@ export class Puzzle {
                 }
             }
         }
+        console.log("The xBalance is: " + Math.abs(xBalance))
+        console.log("The yBalance is: " + Math.abs(yBalance))
         this.currentBalance = Vector.create(xBalance, yBalance)
-        if (xBalance > this.maxUnbalance || yBalance > this.maxUnbalance) {
+        if (Math.abs(xBalance) > this.maxUnbalance || Math.abs(yBalance) > this.maxUnbalance) {
             this.data.lostBalanceCount++
             this.restart()
         }
@@ -243,6 +246,7 @@ export class Puzzle {
                         }
                     }
                     this.calculateBalance()
+                    console.log("calculated")
                     if (block.isGameCompleted()){
                         this.completed = true
                         this.data.completedTime = this.estimatedCompletionTime - this.timeRemaining
