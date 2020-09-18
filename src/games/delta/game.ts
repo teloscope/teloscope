@@ -61,7 +61,7 @@ function update(game: Game) {
             game.physics.remove(entity.body)
         })
         if (currentGame === games.length) {
-            window.location.href = config.endURL;
+            window.location.href = config.endURL
         } else {
             game.create(game)
         }
