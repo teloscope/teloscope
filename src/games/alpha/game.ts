@@ -138,56 +138,93 @@ function setEvents(game: Game) {
     );
 
     game.add.event(
-        Events.Timed.at(40000, () => {
-            const newTask = tm.create("square", 2, "A", 45, 20, 5, 1, matter.Vector.create(360, -30));
+        Events.Timed.at(45000, () => {
+            const newTask = tm.create("square", 5, "A", 50, 40, 30, 1, matter.Vector.create(360, -30));
             game.add.entities(newTask.shapes);
         })
     );
 
     game.add.event(
-        Events.Timed.at(40000, () => {
-            const newTask = tm.create("triangle", 5, "B", 45, 40, 30, 1, matter.Vector.create(280, -300));
+        Events.Timed.at(45000, () => {
+            const newTask = tm.create("triangle", 2, "B", 50, 20, 15, 1, matter.Vector.create(280, -300));
             game.add.entities(newTask.shapes);
         })
     );
 
     game.add.event(
-        Events.Timed.at(70000, () => {
-            const newTask = tm.create("pentagon", 3, "D", 75, 30, 10, 1, matter.Vector.create(310, -120));
+        Events.Timed.at(95000, () => {
+            const newTask = tm.create("pentagon", 3, "D", 95, 35, 10, 10, matter.Vector.create(310, -120));
             game.add.entities(newTask.shapes);
         })
     );
 
     game.add.event(
-        Events.Timed.at(83000, () => {
-            const newTask = tm.create("triangle", 1, "A", 88, 15, 50, 1, matter.Vector.create(120, -200));
+        Events.Timed.at(95000, () => {
+            const newTask = tm.create("triangle", 3, "A", 95, 35, 15, 1, matter.Vector.create(120, -200));
             game.add.entities(newTask.shapes);
         })
     );
 
     game.add.event(
-        Events.Timed.at(90000, () => {
-            const newTask = tm.create("square", 3, "C", 95, 30, 10, 1, matter.Vector.create(50, -300));
+        Events.Timed.at(95000, () => {
+            const newTask = tm.create("square", 1, "C", 105, 10, 50, 1, matter.Vector.create(50, -300));
             game.add.entities(newTask.shapes);
         })
     );
 
     game.add.event(
-        Events.Timed.at(100000, () => {
-            const newTask = tm.create("hexagon", 3, "C", 105, 20, 5, 15, matter.Vector.create(190, -50));
+        Events.Timed.at(140000, () => {
+            const newTask = tm.create("hexagon", 2, "C", 150, 20, 5, 1, matter.Vector.create(190, -50));
             game.add.entities(newTask.shapes);
         })
     );
 
     game.add.event(
-        Events.Timed.at(110000, () => {
-            const newTask = tm.create("pentagon", 4, "D", 115, 27, 50, 1, matter.Vector.create(150, -400));
+        Events.Timed.at(140000, () => {
+            const newTask = tm.create("pentagon", 2, "D", 150, 40, 10, 1, matter.Vector.create(50, -200));
             game.add.entities(newTask.shapes);
         })
     );
-    
+
     game.add.event(
-        Events.Timed.at(143000, () => {
+        Events.Timed.at(140000, () => {
+            const newTask = tm.create("pentagon", 6, "A", 150, 40, 30, 1, matter.Vector.create(150, -400));
+            game.add.entities(newTask.shapes);
+        })
+    );
+
+
+    game.add.event(
+        Events.Timed.at(200000, () => {
+            const newTask = tm.create("triangle", 3, "C", 205, 40, 15, 1, matter.Vector.create(120, -200));
+            game.add.entities(newTask.shapes);
+        })
+    );
+
+    game.add.event(
+        Events.Timed.at(200000, () => {
+            const newTask = tm.create("square", 3, "A", 205, 40, 15, 1, matter.Vector.create(190, -400));
+            game.add.entities(newTask.shapes);
+        })
+    ); 
+
+    game.add.event(
+        Events.Timed.at(250000, () => {
+            const newTask = tm.create("triangle", 2, "C", 265, 15, 15, 1, matter.Vector.create(250, -100));
+            game.add.entities(newTask.shapes);
+        })
+    );
+
+    game.add.event(
+        Events.Timed.at(250000, () => {
+            const newTask = tm.create("pentagon", 2, "A", 265, 15, 15, 1, matter.Vector.create(100, -50));
+            game.add.entities(newTask.shapes);
+        })
+    ); 
+
+
+    game.add.event(
+        Events.Timed.at(280000, () => {
             game.stop()
             gameData.finalScore = score;
             console.log(score)
