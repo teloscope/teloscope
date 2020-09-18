@@ -237,18 +237,13 @@ function update(game: Game) {
         }
     }
 
+    // update task status
     if (game.time.tick % 1000) {
         const seconds = game.time.seconds();
-        const scoreChange = tm.update(seconds);
-        if (scoreChange < 0 && carry !== null) {
-            matter.Body.setDensity(carry.bodyB, 10);
-            let physics = game.physics as MatterPhysics
-            matter.Composite.remove(physics.engine.world, carry);
-            carry = null;
-        }
+        let physics = game.physics as MatterPhysics
+        const scoreChange = tm.update(seconds, carry, physics);
         score += scoreChange;
         gameMenu.scoreText.content = "Score: " + score.toString();
-//            gameMenu.timerText.content = "Time: " + toTimeString(globalTimeLeft - seconds);
     }
 
 }
