@@ -1,7 +1,7 @@
 import { Entity, Area } from 'entropi';
-import {Bodies, Vector, Bounds} from "matter-js";
+import { Bodies, Vector, Bounds, Composite, Body } from "matter-js";
 import { Path, Color, Point, Size, Rectangle, PointText, Group } from 'paper';
-import { MatterBody, MatterControllers } from './matter'
+import { MatterBody, MatterControllers, MatterPhysics } from './matter'
 
 
 const taskBoxSize = new Size(200, 80)
@@ -119,16 +119,19 @@ export class TaskManager {
         return newTask
     }
 
-    update(time: number): number {
+    update(time: number, carry: Matter.Constraint, physics: MatterPhysics): number {
         let score = 0;
         console.log(time)
         this.tasks.forEach(task => {
             if (task.graphic !== null ) {
-                const starting = task.startTime - time
-                // task.graphic.startTimeText.text = "starting in: " + starting.toString()
                 if (task.startTime + task.duration === time) {
                     this.finish(task)
                     score -= task.punishment
+                    if (carry !== null && carry.bodyB.label.substring(0, 1) === task.shape.substring(0, 1)) {
+                        Body.setDensity(carry.bodyB, 10);
+                        Composite.remove(physics.engine.world, carry);
+                        carry = null
+                    }
                 } else if (task.startTime === time) {
                     task.shapes.forEach(shape => {
                         let b = shape.body as MatterBody
@@ -165,7 +168,6 @@ export class TaskManager {
                 } else if (task.startTime <= time) {
 
                     const timeLeft = task.duration - (time - task.startTime);
-                    // task.graphic.startTimeText.text = ""
                     task.graphic.timeText.content = timeLeft.toString();
                 }
             }
@@ -208,7 +210,6 @@ export class TaskManager {
                     const shapeSprite: paper.Path = new Path.RegularPolygon(new Point(position.x + (i * 40), -position.y - (j * 40)), sides, 20)
                     shapeSprite.fillColor = new Color(0.9,0.9,0.9)
                     shapeSprite.strokeWidth = 3
-//                    shapeSprite.strokeColor = new Color(0.5,0.5,0.5)
 
                     entities.push(new Entity({
                         name: entityName,
