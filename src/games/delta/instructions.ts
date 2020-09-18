@@ -58,12 +58,8 @@ function create(game: Game) {
 function update(game: Game) {
     engine.input(game.input)
     if (engine.completed) {
-        engine.clear()
-        game.entities.forEach(entity => {
-            game.renderer.remove(entity.sprite)
-            game.physics.remove(entity.body)
-        })
-        game.create(game)
+        engine.completed = false
+        engine.reset()
     }
     
 }

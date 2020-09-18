@@ -147,7 +147,7 @@ export class GridEngine implements Physics {
                             if (properties[1] === "win") {
                                 ruleCount++
                                 setTimeout(() => {
-                                    window.location.href="end";
+                                    this.completed = true;
                                 }, 300)
                             }
                             if (properties[0] === "symbol") {
@@ -168,19 +168,25 @@ export class GridEngine implements Physics {
                 let properties = extractString(this.map[x][y].label, "_")
                 if (properties[0] === "symbol") {
                     if (this.rightNeighbor(this.map[x][y], "symbol_move")) {
-                        if ( x + 2 >= this.grid.x || this.map[x + 2][y] === null) { continue }
-                        let objectProperties = extractString(this.map[x + 2][y].label, "_")
-                        if (objectProperties[0] === "symbol") {
-                            ruleCount++
-                            this.setMoveable(properties[1] + "_" + properties[2], [objectProperties[1] + "_" + objectProperties[2]])
+                        console.log("found right")
+                        if ( x + 2 < this.grid.x && this.map[x + 2][y] !== null) {  
+                            let objectProperties = extractString(this.map[x + 2][y].label, "_")
+                            if (objectProperties[0] === "symbol") {
+                                ruleCount++
+                                console.log("moving = " + objectProperties[1] + "_" + objectProperties[2])
+                                this.setMoveable(properties[1] + "_" + properties[2], [objectProperties[1] + "_" + objectProperties[2]])
+                            }
                         }
                     }
                     if (this.bottomNeighbor(this.map[x][y], "symbol_move")) {
-                        if ( y + 2 >= this.grid.y || this.map[x][y + 2] === null) { continue }
-                        let objectProperties = extractString(this.map[x][y + 2].label, "_")
-                        if (objectProperties[0] === "symbol") {
-                            ruleCount++
-                            this.setMoveable(properties[1] + "_" + properties[2], [objectProperties[1] + "_" + objectProperties[2]])
+                        console.log("found bottom")
+                        if ( y + 2 < this.grid.y && this.map[x][y + 2] !== null) {  
+                            let objectProperties = extractString(this.map[x][y + 2].label, "_")
+                            if (objectProperties[0] === "symbol") {
+                                ruleCount++
+                                console.log("moving = " + objectProperties[1] + "_" + objectProperties[2])
+                                this.setMoveable(properties[1] + "_" + properties[2], [objectProperties[1] + "_" + objectProperties[2]])
+                            }
                         }
                     }
                     
