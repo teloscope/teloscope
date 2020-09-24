@@ -5,6 +5,7 @@ import { PaperScope, Path, Color, Point, Size, PointText } from "paper";
 import { PaperRenderer } from "./renderer";
 import { FollowController, Zone, toTimeString, Menu } from "./game"
 import { MatterPhysics, MatterBody, MatterControllers } from "./matter"
+import { config } from './config'
 
 // Variables
 const paper = new PaperScope();
@@ -17,16 +18,14 @@ let tm: TaskManager;
 let worldBounds: Matter.Bounds;
 const zones: Zone[] = [];
 let score = 0;
-let globalTimeLeft: number;
 let gameMenu: Menu;
-let startTimer = false;
 
 window.onload = () => {
 
     paper.install(window);
     const paperCanvas = <HTMLCanvasElement> document.getElementById("instructionsCanvas");
-    paperCanvas.width = screen.width;
-    paperCanvas.height = screen.height;
+    paperCanvas.width = config.screen.width;
+    paperCanvas.height = config.screen.height;
     paper.setup(paperCanvas);
 
     followController = new FollowController(lastClicked);
